@@ -1,6 +1,6 @@
 //+------------------------------------------------------------------+
 //|                                              Sample DLL for MQL4 |
-//|                      Copyright © 2004, MetaQuotes Software Corp. |
+//|                   Copyright 2001-2012, MetaQuotes Software Corp. |
 //|                                        http://www.metaquotes.net |
 //+------------------------------------------------------------------+
 #pragma once

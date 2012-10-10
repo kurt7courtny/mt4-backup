@@ -1,8 +1,8 @@
 <chart>
 symbol=GBPUSD
 period=240
-leftpos=422
-digits=4
+leftpos=4168
+digits=5
 scale=4
 graph=0
 fore=0
@@ -16,10 +16,10 @@ days=0
 descriptions=0
 shift_size=20
 fixed_pos=0
-window_left=544
+window_left=864
 window_top=0
-window_right=1088
-window_bottom=359
+window_right=1728
+window_bottom=442
 window_type=1
 background_color=0
 foreground_color=16777215
