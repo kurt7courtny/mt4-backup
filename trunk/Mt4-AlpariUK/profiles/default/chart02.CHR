@@ -1,8 +1,8 @@
 <chart>
 symbol=USDCHF
 period=240
-leftpos=453
-digits=4
+leftpos=4167
+digits=5
 scale=4
 graph=0
 fore=0
@@ -17,9 +17,9 @@ descriptions=0
 shift_size=20
 fixed_pos=0
 window_left=0
-window_top=359
-window_right=544
-window_bottom=718
+window_top=442
+window_right=864
+window_bottom=884
 window_type=1
 background_color=0
 foreground_color=16777215

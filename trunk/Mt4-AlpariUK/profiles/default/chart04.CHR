@@ -1,8 +1,8 @@
 <chart>
 symbol=USDJPY
 period=240
-leftpos=467
-digits=2
+leftpos=4268
+digits=3
 scale=8
 graph=1
 fore=1
@@ -16,11 +16,11 @@ days=0
 descriptions=0
 shift_size=20
 fixed_pos=0
-window_left=544
-window_top=359
-window_right=1088
-window_bottom=718
-window_type=3
+window_left=864
+window_top=442
+window_right=1728
+window_bottom=884
+window_type=1
 background_color=0
 foreground_color=16777215
 barup_color=65280

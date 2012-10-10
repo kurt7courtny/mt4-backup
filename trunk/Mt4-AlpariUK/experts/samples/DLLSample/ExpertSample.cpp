@@ -1,13 +1,13 @@
 //+------------------------------------------------------------------+
 //|                                              Sample DLL for MQL4 |
-//|                 Copyright © 2004-2006, MetaQuotes Software Corp. |
+//|                   Copyright 2001-2012, MetaQuotes Software Corp. |
 //|                                        http://www.metaquotes.net |
 //+------------------------------------------------------------------+
 #define WIN32_LEAN_AND_MEAN  // Exclude rarely-used stuff from Windows headers
 #include <windows.h>
 #include <stdlib.h>
 #include <stdio.h>
-//----
+//---
 #define MT4_EXPFUNC __declspec(dllexport)
 //+------------------------------------------------------------------+
 //|                                                                  |
@@ -23,7 +23,7 @@ struct RateInfo
    double            vol;
   };
 #pragma pack(pop)
-//----
+//---
 struct MqlStr
   {
    int               len;
@@ -35,7 +35,7 @@ static int CompareMqlStr(const void *left,const void *right);
 //+------------------------------------------------------------------+
 BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved)
   {
-//----
+//---
    switch(ul_reason_for_call)
      {
       case DLL_PROCESS_ATTACH:
@@ -44,7 +44,7 @@ BOOL APIENTRY DllMain(HANDLE hModule,DWORD ul_reason_for_call,LPVOID lpReserved)
       case DLL_PROCESS_DETACH:
          break;
      }
-//----
+//---
    return(TRUE);
   }
 //+------------------------------------------------------------------+
@@ -76,7 +76,7 @@ MT4_EXPFUNC char* __stdcall GetStringValue(char *spar)
 //+------------------------------------------------------------------+
 MT4_EXPFUNC double __stdcall GetArrayItemValue(const double *arr,const int arraysize,const int nitem)
   {
-//----
+//---
    if(arr==NULL)
      {
       printf("GetArrayItemValue: NULL array\n");
@@ -92,7 +92,7 @@ MT4_EXPFUNC double __stdcall GetArrayItemValue(const double *arr,const int array
       printf("GetArrayItemValue: wrong item number (%d)\n", nitem);
       return(0.0);
      }
-//----
+//---
    return(arr[nitem]);
   }
 //+------------------------------------------------------------------+
@@ -100,7 +100,7 @@ MT4_EXPFUNC double __stdcall GetArrayItemValue(const double *arr,const int array
 //+------------------------------------------------------------------+
 MT4_EXPFUNC BOOL __stdcall SetArrayItemValue(double *arr,const int arraysize,const int nitem,const double value)
   {
-//----
+//---
    if(arr==NULL)
      {
       printf("GetArrayItemValue: NULL array\n");
@@ -116,7 +116,7 @@ MT4_EXPFUNC BOOL __stdcall SetArrayItemValue(double *arr,const int arraysize,con
       printf("GetArrayItemValue: wrong item number (%d)\n", nitem);
       return(FALSE);
      }
-//----
+//---
    arr[nitem]=value;
    return(TRUE);
   }
@@ -125,31 +125,31 @@ MT4_EXPFUNC BOOL __stdcall SetArrayItemValue(double *arr,const int arraysize,con
 //+------------------------------------------------------------------+
 MT4_EXPFUNC double __stdcall GetRatesItemValue(const RateInfo* rates,const int rates_total,const int shift,const int nrate)
   {
-//----
+//---
    if(rates==NULL)
      {
       printf("GetRatesItemValue: NULL array\n");
       return(0.0);
      }
-//----
+//---
    if(rates_total<0)
      {
       printf("GetRatesItemValue: wrong rates_total number (%d)\n", rates_total);
       return(0.0);
      }
-//----
+//---
    if(shift<0 || shift>=rates_total)
      {
       printf("GetRatesItemValue: wrong shift number (%d)\n", shift);
       return(0.0);
      }
-//----
+//---
    if(nrate<0 || nrate>5)
      {
       printf("GetRatesItemValue: wrong rate index (%d)\n", nrate);
       return(0.0);
      }
-//----
+//---
    int nitem=rates_total-1-shift;
    switch(nrate)
      {
@@ -160,7 +160,7 @@ MT4_EXPFUNC double __stdcall GetRatesItemValue(const RateInfo* rates,const int r
       case 4: return rates[nitem].close;
       case 5: return rates[nitem].vol;
      }
-//----
+//---
    return(0.0);
   }
 //+------------------------------------------------------------------+
@@ -168,7 +168,7 @@ MT4_EXPFUNC double __stdcall GetRatesItemValue(const RateInfo* rates,const int r
 //+------------------------------------------------------------------+
 MT4_EXPFUNC int __stdcall SortStringArray(MqlStr *arr,const int arraysize)
   {
-//----
+//---
    if(arr==NULL)
      {
       printf("SortStringArray: NULL array\n");
@@ -179,9 +179,9 @@ MT4_EXPFUNC int __stdcall SortStringArray(MqlStr *arr,const int arraysize)
       printf("SortStringArray: wrong arraysize (%d)\n", arraysize);
       return(-1);
      }
-//----
+//---
    qsort(arr,arraysize,sizeof(MqlStr),CompareMqlStr);
-//----
+//---
    return(arraysize);
   }
 //+------------------------------------------------------------------+
@@ -190,7 +190,7 @@ MT4_EXPFUNC int __stdcall SortStringArray(MqlStr *arr,const int arraysize)
 MT4_EXPFUNC int __stdcall ProcessStringArray(MqlStr *arr,const int arraysize)
   {
    int   len1,len2;
-//----
+//---
    if(arr==NULL)
      {
       printf("ProcessStringArray: NULL array\n");
@@ -201,23 +201,23 @@ MT4_EXPFUNC int __stdcall ProcessStringArray(MqlStr *arr,const int arraysize)
       printf("ProcessStringArray: wrong arraysize (%d)\n", arraysize);
       return(-1);
      }
-//----
+//---
    for(int i=0; i<arraysize-1; i++)
      {
       if(arr[i].string==NULL) len1=0;
       else len1=strlen(arr[i].string);
       if(arr[i+1].string==NULL) len2=0;
       else len2=strlen(arr[i+1].string);
-      //---- uninitialized string
+      //--- uninitialized string
       if(arr[i+1].string==NULL) continue;
-      //---- destination string is uninitialized and cannot be allocated within dll
+      //--- destination string is uninitialized and cannot be allocated within dll
       if(arr[i].string==NULL)   continue;
-      //---- memory piece is less than needed and cannot be reallocated within dll
+      //--- memory piece is less than needed and cannot be reallocated within dll
       if(arr[i].len<len1+len2)  continue;
-      //---- final processing
+      //--- final processing
       strcat(arr[i].string,arr[i+1].string);
      }
-//----
+//---
    return(arraysize);
   }
 //+------------------------------------------------------------------+
@@ -227,10 +227,10 @@ int CompareMqlStr(const void *left,const void *right)
   {
    MqlStr *leftstr=(MqlStr *)left;
    MqlStr *rightstr=(MqlStr *)right;
-//----
+//---
    if(leftstr->string==NULL) return(-1);
    if(rightstr->string==NULL) return(1);
-//----
+//---
    return(strcmp(leftstr->string,rightstr->string));
   }
 //+------------------------------------------------------------------+
