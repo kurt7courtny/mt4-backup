@@ -12,12 +12,18 @@
 #property indicator_color2 Red
 
 //---- input parameters
+
+extern bool		EmailAlert	= false;
+extern bool		PopupAlert	= false;
+
 extern int HPeriod=4;
 extern int LPeriod=4;
 
 //---- buffers
 double HighBuffer[];
 double LowBuffer[];
+int lastalert=0;
+
 //int count=0;
 int deinit()
   {
@@ -59,15 +65,33 @@ int start()
   {
    int    i,k;
    int    counted_bars=IndicatorCounted();
-   double price;
+   string sMessage="Turtle " + Symbol() +" Cross ";
+   // + "@" + DoubleToStr(Bid,Digits) 
+   //double price;
 //---- last counted bar will be recounted
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
 //---- signal line is simple movimg average
    for(i=0; i<limit; i++)
    {
-      HighBuffer[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i)];
-      LowBuffer[i] =Low[iLowest(NULL, 0, MODE_LOW, LPeriod, i)];
+      HighBuffer[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+1)];
+      LowBuffer[i] =Low[iLowest(NULL, 0, MODE_LOW, LPeriod, i+1)];
+      if( Open[0] > HighBuffer[1] && lastalert != Time[0])
+      {
+         sMessage = sMessage + DoubleToStr(HPeriod,0) + " High@" + DoubleToStr(Ask,Digits);
+         if (PopupAlert) Alert(sMessage);
+		   if (EmailAlert) SendMail("Alert CH " + Symbol(), sMessage);
+         lastalert=Time[0];
+      }
+      
+      if( Open[0] < LowBuffer[1] && lastalert != Time[0])
+      {
+         sMessage = sMessage + DoubleToStr(HPeriod,0) + " Low@" + DoubleToStr(Bid,Digits);
+         if (PopupAlert) Alert(sMessage);
+		   if (EmailAlert) SendMail("Alert CL " + Symbol(), sMessage);
+         lastalert=Time[0];
+      }
+      // Print("lasth:"+HighBuffer[1]+" lastl:"+LowBuffer[1]);
     /*  if( TimeDayOfWeek(Time[i])==1)
       {
          ObjectDelete("A6:"+Time[count]);
