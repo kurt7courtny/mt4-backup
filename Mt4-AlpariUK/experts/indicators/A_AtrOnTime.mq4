@@ -71,20 +71,21 @@ int start()
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
 //---- signal line is simple movimg average
-   for(i=0; i<limit; i++)
+   for(i=0; i<800; i++)
    {
       Buffer1[i]=iATR(NULL, NULL, 1, i);
       Buffer2[i]=0;
       for(k=0;k<HistoryPeriod;k++)
       {
          int ib=iBarShift(NULL, 0, Time[i]-PERIOD_D1*k,true);
+         //Print("bufer2,"+ib+","+Buffer2[i]);
          if(ib!=-1)
          {
             Buffer2[i]+=High[ib]-Low[ib];
             j++;       
          }     
       }
-      Print("bufer2,"+i+","+Buffer2[i]);
+      
       Buffer2[i]=Buffer2[i]/j;
     
    }
