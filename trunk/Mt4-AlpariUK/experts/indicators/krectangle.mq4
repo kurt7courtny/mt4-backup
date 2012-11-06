@@ -8,7 +8,7 @@
 
 #property indicator_chart_window
 //--- input parameters
-extern double    atrp=0.15;
+extern double    atrp=0.1;
 extern int       reclength=20;
 extern int       minwidth=250;
 extern int       breakwidth=50;
@@ -32,8 +32,7 @@ int init()
 int deinit()
   {
 //----
-   for(int i=0;i<count;i++)
-      ObjectDelete("rec"+i);
+   ObjectsDeleteAll();
 //----
    return(0);
   }
@@ -64,14 +63,14 @@ int start()
          i=i-reclength;
          count+=1;
       } 
-   }
+
    for(int j=iBarShift( NULL, NULL, lastime);j>=0 && lastu!=0 && lastl !=0; j--)
    {
-      Print("j="+j+" Time: "+TimeToStr(Time[j]));
+      //Print("j="+j+" Time: "+TimeToStr(Time[j]));
       if( Close[j] < lastl - breakwidth*Point)
       {
-         ObjectCreate("rec"+count, OBJ_ARROW, 0, Time[j], lastu + breakwidth*Point*5);
-         ObjectSet("rec"+count, OBJPROP_ARROWCODE, SYMBOL_ARROWDOWN);
+         ObjectCreate("bd"+count, OBJ_ARROW, 0, Time[j], lastu + breakwidth*Point);
+         ObjectSet("bd"+count, OBJPROP_ARROWCODE, SYMBOL_ARROWDOWN);
          if(bAlert)
             SendMail( Symbol()+ " Break Lower Band", "Channel: "+DoubleToStr(lastl, 4)+" ~ "+DoubleToStr(lastu,4)+" Price: "+DoubleToStr(Close[j],4)+" Time: "+TimeToStr(Time[j]));
          lastu=0;
@@ -82,8 +81,8 @@ int start()
       
       if( Close[j] > lastu + breakwidth*Point)
       {
-         ObjectCreate("rec"+count, OBJ_ARROW, 0, Time[j], lastl - breakwidth*Point*5);
-         ObjectSet("rec"+count, OBJPROP_ARROWCODE, SYMBOL_ARROWUP);
+         ObjectCreate("bu"+count, OBJ_ARROW, 0, Time[j], lastl - breakwidth*Point);
+         ObjectSet("bu"+count, OBJPROP_ARROWCODE, SYMBOL_ARROWUP);
          ObjectSet("rec"+count, OBJPROP_COLOR, Lime);
          if(bAlert)
             SendMail( Symbol()+ " Break Upper Band", "Channel: "+DoubleToStr(lastl,4)+" ~ "+DoubleToStr(lastu,4)+" Price: "+DoubleToStr(Close[j],4)+" Time: "+TimeToStr(Time[j]));
@@ -93,6 +92,7 @@ int start()
          break;
       }
    }
+      }
 //----
    return(0);
   }

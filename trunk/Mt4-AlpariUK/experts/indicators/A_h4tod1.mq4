@@ -306,7 +306,7 @@ int UpdateChartWindow()
    }
    if(hwnd == 0) {
       //trying to detect the chart window for updating
-      hwnd = WindowHandle(Symbol() + "_", NewPeriod);
+      hwnd = WindowHandle(Symbol() + "_" ,NewPeriod);
       DebugMsg("hwnd: " + hwnd);
    }
    if(hwnd!= 0) {
