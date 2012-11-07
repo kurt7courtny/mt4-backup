@@ -33,7 +33,7 @@ int init()
 //---- indicator lines
    SetIndexStyle(0,DRAW_HISTOGRAM);
    SetIndexStyle(1,DRAW_LINE);
-   SetIndexShift(1, PERIOD_D1 / Period());
+   //SetIndexShift(1, PERIOD_D1 / Period());
    /*
    int d[8], index;
    //---- name for DataWindow and indicator subwindow label
@@ -71,14 +71,13 @@ int start()
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
 //---- signal line is simple movimg average
-   for(i=0; i<800; i++)
+   for(i=0; i<300; i++)
    {
       Buffer1[i]=iATR(NULL, NULL, 1, i);
-      Buffer2[i]=0;
+      j=0;
       for(k=0;k<HistoryPeriod;k++)
       {
-         int ib=iBarShift(NULL, 0, Time[i]-PERIOD_D1*k,true);
-         //Print("bufer2,"+ib+","+Buffer2[i]);
+         int ib=iBarShift(NULL, 0, Time[i]-PERIOD_D1*k*60,true);
          if(ib!=-1)
          {
             Buffer2[i]+=High[ib]-Low[ib];
@@ -87,6 +86,7 @@ int start()
       }
       
       Buffer2[i]=Buffer2[i]/j;
+      //Print("bufer2,"+i+","+j+","+Buffer2[i]);
     
    }
 //----
