@@ -1,8 +1,8 @@
 <chart>
-symbol=USDJPY
+symbol=GBPUSD
 period=1440
-leftpos=0
-digits=3
+leftpos=3183
+digits=5
 scale=8
 graph=1
 fore=0
@@ -16,10 +16,10 @@ days=1
 descriptions=0
 shift_size=20
 fixed_pos=0
-window_left=22
-window_top=33
-window_right=1477
-window_bottom=751
+window_left=198
+window_top=297
+window_right=1653
+window_bottom=1015
 window_type=1
 background_color=16777215
 foreground_color=0
@@ -34,7 +34,7 @@ askline_color=17919
 stops_color=17919
 
 <window>
-height=289
+height=290
 <indicator>
 name=main
 </indicator>
@@ -78,6 +78,8 @@ name=A6
 flags=339
 window_num=0
 <inputs>
+EmailAlert=0
+PopupAlert=0
 HPeriod=4
 LPeriod=4
 </inputs>
@@ -98,7 +100,7 @@ show_data=1
 </window>
 
 <window>
-height=42
+height=41
 <indicator>
 name=Custom Indicator
 <expert>
