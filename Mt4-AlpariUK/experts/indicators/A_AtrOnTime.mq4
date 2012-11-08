@@ -71,7 +71,7 @@ int start()
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
 //---- signal line is simple movimg average
-   for(i=0; i<300; i++)
+   for(i=0; i<800; i++)
    {
       Buffer1[i]=iATR(NULL, NULL, 1, i);
       j=0;
