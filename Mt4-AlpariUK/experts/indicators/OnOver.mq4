@@ -49,9 +49,9 @@ int start()
       double p2=MathAbs(Open[i]-High[i])/(High[i]-Low[i]);
       double p3=MathAbs(Open[i]-Low[i])/(High[i]-Low[i]);
       double p4=MathAbs(Close[i]-High[i])/(High[i]-Low[i]);
+      ObjectDelete("oo"+Time[i]);
       if(( p1<drange && p2<drange) || (p3<drange && p4<drange))
-      {
-         ObjectDelete("oo"+Time[i]);
+      {  
          ObjectCreate( "oo" + Time[i], OBJ_ARROW, 0, Time[i], Low[i]); 
          ObjectSet("oo" + Time[i], OBJPROP_ARROWCODE, 251);
       }   
