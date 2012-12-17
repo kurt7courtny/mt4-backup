@@ -115,6 +115,7 @@ extern bool    Debug = false;
 int      FileHandle = -1;
 int      CSVHandle = -1;
 int      NewPeriod = 0;
+int      LastWriteTime =0;
 
 #define OUTPUT_HST_ONLY    0
 #define OUTPUT_CSV_HST     1
@@ -260,8 +261,9 @@ int UpdateHistoryFile(int start_pos, bool init = false)
       }
 
       //a new bar
-      if (LastBarTime >=  i_time+ps) {
+      if ( TimeDay(LastBarTime) != LastWriteTime) {
          //write the bar data      
+         LastWriteTime=TimeDay(LastBarTime);
          WriteHistoryData();
          cnt++;
          i_time = LastBarTime/ps;
