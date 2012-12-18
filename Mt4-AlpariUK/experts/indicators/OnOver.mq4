@@ -13,7 +13,7 @@
 
 
 // ³¬¹ıµø·ù¶àÉÙ
-double drange = 0.15;
+double drange = 0.2;
 int init()
   {
 //---- indicators
