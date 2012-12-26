@@ -8,15 +8,17 @@
 
 #property indicator_separate_window
 #property indicator_buffers 2
-#property indicator_color1 Red
-#property indicator_color2 Blue
+#property indicator_color1 Blue
+#property indicator_color2 Red
 //---- input parameters
-extern int HLPeriod=4;
+extern int HLPeriod=2;
 extern int AtrPeriod=66;
-extern double p1=0.8;
+extern double p1=0.7;
 //---- buffers
-double AtrBuffer[];
+double HLBuffer1[];
+double HLBuffer2[];
 double TempBuffer[];
+
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
@@ -24,12 +26,15 @@ int init()
   {
    string short_name;
 //---- 1 additional buffer used for counting.
-   IndicatorBuffers(2);
+   IndicatorBuffers(3);
 //---- indicator line
-   SetIndexStyle(0,DRAW_LINE);
+   SetIndexStyle(0,DRAW_HISTOGRAM);
    SetIndexStyle(1,DRAW_HISTOGRAM);
-   SetIndexBuffer(0,AtrBuffer);
-   SetIndexBuffer(1,TempBuffer);
+   //SetIndexStyle(2,DRAW_HISTOGRAM);
+   SetIndexBuffer(0,HLBuffer1);
+   SetIndexBuffer(1,HLBuffer2);
+   SetIndexBuffer(2,TempBuffer);
+   //SetIndexBuffer(2,TempBuffer);
 //---- name for DataWindow and indicator subwindow label
    short_name=HLPeriod+"日波动区间("+AtrPeriod+")";
    IndicatorShortName(short_name);
@@ -48,20 +53,34 @@ int start()
 //----
    if(Bars<=AtrPeriod) return(0);
 //---- initial zero
-   if(counted_bars<1)
-      for(i=1;i<=AtrPeriod;i++) AtrBuffer[Bars-i]=0.0;
 //----
    i=Bars-counted_bars-1;
    while(i>=0)
      {
+      //HLBuffer1[i]=0.0;
+      //HLBuffer2[i]=0.0;
+      //TempBuffer[i]=1;
       TempBuffer[i]=High[iHighest(NULL,0,MODE_HIGH,HLPeriod,i)] - Low[iLowest(NULL,0,MODE_LOW,HLPeriod,i)];
+      //Print("Temp,",DoubleToStr(TempBuffer[i], 5),",i,",i);
       i--;
      }
 //----
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
    for(i=0; i<limit; i++)
-      AtrBuffer[i]=p1*iMAOnArray(TempBuffer,Bars,AtrPeriod,0,MODE_SMA,i);
+   {
+      double pp=p1*iMAOnArray(TempBuffer,Bars,AtrPeriod,0,MODE_SMA,i);
+      if( pp<TempBuffer[i])
+      {
+         HLBuffer1[i]=TempBuffer[i];
+         HLBuffer2[i]=0;
+      }
+      else
+      {
+         HLBuffer1[i]=0;
+         HLBuffer2[i]=TempBuffer[i];  
+      }
+   }
 //----
    return(0);
   }
