@@ -115,7 +115,6 @@ extern bool    Debug = false;
 int      FileHandle = -1;
 int      CSVHandle = -1;
 int      NewPeriod = 0;
-int      LastWriteTime =0;
 
 #define OUTPUT_HST_ONLY    0
 #define OUTPUT_CSV_HST     1
@@ -261,10 +260,8 @@ int UpdateHistoryFile(int start_pos, bool init = false)
       }
 
       //a new bar
-      if ( TimeDay(LastBarTime) != LastWriteTime) {
+      if (LastBarTime >=  i_time+ps) {
          //write the bar data      
-         LastWriteTime=TimeDay(LastBarTime);
-         //Print("last write day 1,", LastWriteTime);
          WriteHistoryData();
          cnt++;
          i_time = LastBarTime/ps;
@@ -274,32 +271,28 @@ int UpdateHistoryFile(int start_pos, bool init = false)
          d_high = High[i];
          d_close = Close[i];
          d_volume = Volume[i];
-         if (FileHandle >= 0) last_fpos = FileTell(FileHandle);
-         if (CSVHandle >= 0) csv_fpos = FileTell(CSVHandle);
       } else {
          //no new bar
          //Print("t: ", TimeHour(LastBarTime));
-         //Print("last write day 2,", LastWriteTime);
          d_volume +=  Volume[i];
          if (Low[i]<d_low) d_low = Low[i];
          if (High[i]>d_high) d_high = High[i];
          d_close = Close[i];      
-         if (FileHandle >= 0) last_fpos = FileTell(FileHandle);
-         if (CSVHandle >= 0) csv_fpos = FileTell(CSVHandle);
-         WriteHistoryData();
-         if (FileHandle >= 0) FileSeek(FileHandle,last_fpos,SEEK_SET);
-         if (CSVHandle >= 0) FileSeek(CSVHandle, csv_fpos, SEEK_SET);
-         cnt++;
-         d_volume -=  Volume[0];
       }
-      //flush the data writen
-      if (FileHandle >= 0) FileFlush(FileHandle);
-      if (CSVHandle >= 0) FileFlush(CSVHandle);
       i--;
    }
 
    //record last_fpos before writing last bar.
+   if (FileHandle >= 0) last_fpos = FileTell(FileHandle);
+   if (CSVHandle >= 0) csv_fpos = FileTell(CSVHandle);
    
+   WriteHistoryData();
+   cnt++;
+   d_volume -=  Volume[0];
+   
+   //flush the data writen
+   if (FileHandle >= 0) FileFlush(FileHandle);
+   if (CSVHandle >= 0) FileFlush(CSVHandle);
    return (cnt);
 }
 
