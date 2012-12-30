@@ -8,8 +8,8 @@
 
 #property indicator_separate_window
 #property indicator_buffers 2
-#property indicator_color1 Blue
-#property indicator_color2 Red
+#property indicator_color1 Red
+#property indicator_color2 Blue
 //---- input parameters
 extern int HLPeriod=2;
 extern int AtrPeriod=66;
@@ -28,8 +28,8 @@ int init()
 //---- 1 additional buffer used for counting.
    IndicatorBuffers(3);
 //---- indicator line
-   SetIndexStyle(0,DRAW_HISTOGRAM);
-   SetIndexStyle(1,DRAW_HISTOGRAM);
+   SetIndexStyle(0,DRAW_HISTOGRAM,0,0,Blue);
+   SetIndexStyle(1,DRAW_HISTOGRAM,0,0,Red);
    //SetIndexStyle(2,DRAW_HISTOGRAM);
    SetIndexBuffer(0,HLBuffer1);
    SetIndexBuffer(1,HLBuffer2);
