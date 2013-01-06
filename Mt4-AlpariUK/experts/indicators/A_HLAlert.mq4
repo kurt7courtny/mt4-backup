@@ -47,6 +47,8 @@ int init()
 //+------------------------------------------------------------------+
 //| Average True Range                                               |
 //+------------------------------------------------------------------+
+int c=0;
+int d=0;
 int start()
   {
    int i,counted_bars=IndicatorCounted();
@@ -61,9 +63,12 @@ int start()
       //HLBuffer2[i]=0.0;
       //TempBuffer[i]=1;
       TempBuffer[i]=High[iHighest(NULL,0,MODE_HIGH,HLPeriod,i)] - Low[iLowest(NULL,0,MODE_LOW,HLPeriod,i)];
+      if(TimeYear(Time[i]) == Year())
+         c+=1;
       //Print("Temp,",DoubleToStr(TempBuffer[i], 5),",i,",i);
       i--;
      }
+   
 //----
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
@@ -79,8 +84,11 @@ int start()
       {
          HLBuffer1[i]=0;
          HLBuffer2[i]=TempBuffer[i];  
+         if(TimeYear(Time[i]) == Year())
+            d+=1;
       }
    }
+   Print("c=",c," d=",d);
 //----
    return(0);
   }
