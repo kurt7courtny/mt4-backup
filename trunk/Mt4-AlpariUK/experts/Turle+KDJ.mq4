@@ -120,7 +120,8 @@ void CheckForOpen()
 //+------------------------------------------------------------------+
 void CheckForClose()
   {
-   bool ranging = Open[0] < iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Waveline, 1)) || Open[0] > iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Waveline, 1));
+   bool ranging = ( Open[0] >= iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Trendline, 1)) && Open[0] < iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Waveline, 1)))
+    || ( Open[0] <= iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Trendline, 1)) && Open[0] > iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Waveline, 1)));
    if( ranging)
    {
      for(int i=0;i<OrdersTotal();i++)
