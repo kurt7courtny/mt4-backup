@@ -10,10 +10,7 @@ extern double MaximumRisk        = 0.02;
 extern double DecreaseFactor     = 3;
 extern double Maxlots            = 3;
 
-extern double MovingPeriod       = 12;
-extern double MovingShift        = 6;
-
-extern double Trendline = 8;        // 趋势开始, 准备进场
+extern double Trendline = 12;        // 趋势开始, 准备进场
 extern double Period1 = PERIOD_H4;  // 大周期判断趋势
 
 extern double Waveline = 6;         // 趋势结束，震荡开始，wl < tl，退出
@@ -75,19 +72,10 @@ double LotsOptimized()
 //+------------------------------------------------------------------+
 //| Check for open order conditions                                  |
 //+------------------------------------------------------------------+
+int trend=0;
 void CheckForOpen()
   {
    int res;
-   // -1 trend down, 1 trend up, 0 Ranging
-   int trend=0;
-   if( Open[0] > iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Trendline, 1)))
-   {
-      trend=1;
-   }
-   else if( Open[0] < iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Trendline, 1)))
-   {
-      trend=-1;
-   }
    
    double sm2=iStochastic(NULL, NULL, Wavep1, Wavep2, Wavep3, MODE_SMA,0,MODE_MAIN,2);
    double ss2=iStochastic(NULL, NULL, Wavep1, Wavep2, Wavep3, MODE_SMA,0,MODE_SIGNAL,2);
@@ -97,7 +85,7 @@ void CheckForOpen()
    // 多头
    if(trend>0)
    {
-      if( sm1 > Wavep4 && sm2 > ss2 && sm1 < ss1)   
+      if( sm1 < Wavep5 && sm2 < ss2 && sm1 > ss1)   
       {
          res=OrderSend(Symbol(),OP_BUY,LotsOptimized(),Ask,3,0,0,"",MAGICMA,0,Blue);
          lastime = Time[0];
@@ -106,7 +94,7 @@ void CheckForOpen()
    }
    else if( trend < 0)
    {
-      if( sm1 < Wavep5 && sm2 < ss2 && sm1 > ss1)     
+      if( sm1 > Wavep4 && sm2 > ss2 && sm1 < ss1)     
       {
          res=OrderSend(Symbol(),OP_SELL,LotsOptimized(),Bid,3,0,0,"",MAGICMA,0,Red);
          lastime = Time[0];
@@ -120,28 +108,43 @@ void CheckForOpen()
 //+------------------------------------------------------------------+
 void CheckForClose()
   {
-   bool ranging = ( Open[0] >= iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Trendline, 1)) && Open[0] < iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Waveline, 1)))
-    || ( Open[0] <= iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Trendline, 1)) && Open[0] > iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Waveline, 1)));
-   if( ranging)
-   {
-     for(int i=0;i<OrdersTotal();i++)
-     {
-      if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==false)        break;
-      if(OrderMagicNumber()!=MAGICMA || OrderSymbol()!=Symbol()) continue;
-      //---- check order type 
-      if(OrderType()==OP_BUY)
-        {
-         OrderClose(OrderTicket(),OrderLots(),Bid,3,White);
-         break;
-        }
-      if(OrderType()==OP_SELL)
-        {
-         OrderClose(OrderTicket(),OrderLots(),Ask,3,White);
-         break;
-        }
-     }  
-   }
-   
+     // -1 trend down, 1 trend up, 0 Ranging
+
+      if( Open[0] > iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Trendline, 1)))
+      {
+         trend=1;
+      }
+      else if( Open[0] < iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Trendline, 1)))
+      {
+         trend=-1;
+      }
+      if( (Open[0] <= iLow(NULL, Period1, iLowest(NULL, Period1, MODE_LOW, Waveline, 1)) && trend > 0) || (Open[0] >= iHigh(NULL, Period1, iHighest(NULL, Period1, MODE_HIGH, Waveline, 1)) && trend < 0))
+      {
+         trend=0;
+      }
+      
+      for(int i=0;i<OrdersTotal();i++)
+      {
+       if(OrderSelect(i,SELECT_BY_POS,MODE_TRADES)==false)        break;
+       if(OrderMagicNumber()!=MAGICMA || OrderSymbol()!=Symbol()) continue;
+       //---- check order type 
+       if(OrderType()==OP_BUY )
+         {
+          if(trend<=0)
+          {
+            OrderClose(OrderTicket(),OrderLots(),Bid,3,White);
+            break;
+          }
+         }
+       if(OrderType()==OP_SELL)
+         {
+          if(trend>=0)
+          {
+            OrderClose(OrderTicket(),OrderLots(),Ask,3,White);
+            break;
+          }
+         }
+      } 
   }
 //+------------------------------------------------------------------+
 //| Start function                                                   |
