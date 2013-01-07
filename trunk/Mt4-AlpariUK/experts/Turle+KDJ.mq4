@@ -10,16 +10,18 @@ extern double MaximumRisk        = 0.02;
 extern double DecreaseFactor     = 3;
 extern double Maxlots            = 3;
 
-extern double Trendline = 12;        // 趋势开始, 准备进场
+extern double Trendline = 24;        // 趋势开始, 准备进场
 extern double Period1 = PERIOD_H4;  // 大周期判断趋势
 
-extern double Waveline = 6;         // 趋势结束，震荡开始，wl < tl，退出
+extern double Waveline = 12;         // 趋势结束，震荡开始，wl < tl，退出
 extern double Wavep1 = 5;           // 震荡指标参数
 extern double Wavep2 = 3;
 extern double Wavep3 = 3;
 
 extern double Wavep4 = 60;          // 震荡指标在此之上掉头空
 extern double Wavep5 = 40;          // 震荡指标在此之下掉头多
+
+extern double fixsl  = 500;         // 固定止损点
 
 double lastime = 0;                 // last trade time
 //+------------------------------------------------------------------+
@@ -87,7 +89,7 @@ void CheckForOpen()
    {
       if( sm1 < Wavep5 && sm2 < ss2 && sm1 > ss1)   
       {
-         res=OrderSend(Symbol(),OP_BUY,LotsOptimized(),Ask,3,0,0,"",MAGICMA,0,Blue);
+         res=OrderSend(Symbol(),OP_BUY,LotsOptimized(),Ask,3,Ask-fixsl*Point,0,"",MAGICMA,0,Blue);
          lastime = Time[0];
          return;
       }
@@ -96,7 +98,7 @@ void CheckForOpen()
    {
       if( sm1 > Wavep4 && sm2 > ss2 && sm1 < ss1)     
       {
-         res=OrderSend(Symbol(),OP_SELL,LotsOptimized(),Bid,3,0,0,"",MAGICMA,0,Red);
+         res=OrderSend(Symbol(),OP_SELL,LotsOptimized(),Bid,3,Bid+fixsl*Point,0,"",MAGICMA,0,Red);
          lastime = Time[0];
          return;   
       }
