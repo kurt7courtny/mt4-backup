@@ -77,6 +77,7 @@ int init()
    SetIndexEmptyValue(2, -100);
    SetIndexEmptyValue(3, 100);
    SetIndexEmptyValue(4, 100);
+   SetLevelValue(0,0);
    return(0);
   }
 //+------------------------------------------------------------------+
@@ -99,7 +100,7 @@ REF(LLV(DTO,55),56),COLORGREEN;
 //---- 
    for(i=0; i<limit; i++)
    {
-      DTOBuffer[i]=Close[i]-(iMA(NULL, NULL, DTO_MA, 0, MODE_SMA, PRICE_HIGH, 0) + iMA(NULL, NULL, DTO_MA, 0, MODE_SMA, PRICE_LOW, 0))/2;
+      DTOBuffer[i]=Close[i]-iMA(NULL, NULL, DTO_MA, 0, MODE_SMA, PRICE_MEDIAN,i);
       Print("DTO:",DTOBuffer[i]);
    }
    
