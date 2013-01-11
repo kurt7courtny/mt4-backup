@@ -88,7 +88,7 @@ int start()
             d+=1;
       }
    }
-   Print("c=",c," d=",d);
+//   Print("c=",c," d=",d);
 //----
    return(0);
   }
