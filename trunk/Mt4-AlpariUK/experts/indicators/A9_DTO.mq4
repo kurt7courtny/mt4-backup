@@ -31,9 +31,6 @@ double DTOBufferRH2[];
 double DTOBufferRL1[];
 double DTOBufferRL2[];
 
-extern int HPeriod=4;
-extern int LPeriod=4;
-
 //int count=0;
 int deinit()
   {
