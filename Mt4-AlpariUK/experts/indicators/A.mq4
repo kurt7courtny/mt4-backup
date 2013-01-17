@@ -47,7 +47,6 @@ int start()
 //---- last counted bar will be recounted
    if(counted_bars>0) counted_bars--;
    limit=Bars-counted_bars;
-
    return(0);
   }
 //+------------------------------------------------------------------+

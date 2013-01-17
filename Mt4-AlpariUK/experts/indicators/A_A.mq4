@@ -32,7 +32,7 @@ string Spreads[] = {"2.5", "2.8", "2.5", "2.8", "2.7", "3.2",
                     //"",
                     "2.3", "3.0", "4.3", "3.0", "3.6", "3.6"};
 
-string Indicators[] = { "Currency", "Spread", "ATR Yd", "ATR St", "ATR Lg", "Ins Day", "OutsDay", "ADX   "};
+string Indicators[] = { "Currency", "Spread", "Close", "2DaysH", "2DaysL", "2DaysR", "10DaysH", "10DaysL", "ADX(14)", "ADX_Dir", "MA22  ", "MA69  ", "MA123 ", "KD"};
 
 int cpn,idn;
 int Level = 15;
@@ -88,93 +88,32 @@ int start()
 
    for(i = 0; i < cpn; i++) {
       xpos=xstep;
-      for( int j = 0; j < idn; j++)
-      {
-         switch (j)
-         {
-            case 0:
-               handle0(i);
-               break;
-            case 1:
-               handle1(i);
-               break;
-            case 2:
-               handle2(i);
-               break;
-            case 3:
-               break;
-            case 4:
-               break;
-            case 5:
-               handle5(i);
-               break;
-            case 6:
-               break;
-            case 7:
-               handle7(i);
-               break;
-            default:
-            Print("Canot Handle " + idn);
-            break;
-         }
-      }
-      /*
-      color objc;
-      double iH = iHigh( CurrencyPairs[i], PERIOD_D1, 1);
-      double iL = iLow( CurrencyPairs[i], PERIOD_D1, 1);
-      double iC = iClose( CurrencyPairs[i], PERIOD_D1, 1);
-      double iO = iOpen( CurrencyPairs[i], PERIOD_D1, 1);
-      double iHL = iH - iL;
-      double iCO = iC - iO;
-      
-      if( iHL == 0) {
-         objc = Silver;
-      }
-      else {
-         double v = iCO / iHL;
-         if( v == 0) {
-            objc = Silver;
-         }
-         else if( v > 0) {
-            if( v > dp1) {
-               objc = Lime;
-            }
-            else if( v > dp2) {
-               objc = Green;
-            }
-            else {
-               objc = YellowGreen;
-            }
-         }
-         else {
-            v = MathAbs(v);
-            if( v > dp1) {
-               objc = Red;
-            }
-            else if( v > dp2) {
-               objc = Tomato;
-            }
-            else {
-               objc = FireBrick;
-            }
-         }
-      }
-      v = iCO / iHL;
-      ObjectCreate("KP"+i, OBJ_LABEL, WindowFind("KDAILY PERCENT"), 0, 0);
-      ObjectSetText("KP"+i,CurrencyPairs[i] + "   DailyPercent : " + DoubleToStr( v, 5) + "  ATR : " + DoubleToStr( iATR( CurrencyPairs[i], PERIOD_D1, 14, 0) * 10000, 0),9, "Arial Bold", objc);
-      ObjectSet("KP"+i, OBJPROP_CORNER, 0);
-      ObjectSet("KP"+i, OBJPROP_XDISTANCE, 100 + i / 15 * 300);
-      ObjectSet("KP"+i, OBJPROP_YDISTANCE, 3 + i % 15 * 30);
-   }
-   */
-//----
+      handle2(i);
    }
    return(0);
   }
 //+------------------------------------------------------------------+
 
-void handle0(int i)
+// "2DaysH", "2DaysL", "2DaysR", "10DaysH", "10DaysL", "ADX(14)", "ADX_Dir", "MA22  ", "MA69  ", "MA123 ", "KD"};
+//double p[100];
+void handle2(int i)
 {
+   double para[100];
+   para[2] = iClose(CurrencyPairs[i], PERIOD_D1,1);
+   para[3] = MathMax(iClose(CurrencyPairs[i], PERIOD_D1,3), MathMax(iHigh(CurrencyPairs[i], PERIOD_D1,1), iHigh(CurrencyPairs[i], PERIOD_D1,2)));
+   para[4] = MathMin(iClose(CurrencyPairs[i], PERIOD_D1,3), MathMin(iLow(CurrencyPairs[i], PERIOD_D1,1), iLow(CurrencyPairs[i], PERIOD_D1,2)));
+   para[5] = iHigh(CurrencyPairs[i], PERIOD_D1, iHighest(CurrencyPairs[i], PERIOD_D1, MODE_HIGH, 10, 1));
+   para[6] = iLow(CurrencyPairs[i], PERIOD_D1, iLowest(CurrencyPairs[i], PERIOD_D1, MODE_LOW, 10, 1));
+   para[7] = (para[3] - para[4]);
+   para[8] = iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN,1);
+   para[9] = iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN,1)>iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN,2);
+   para[10] = iMA(CurrencyPairs[i], PERIOD_D1,22,0, MODE_SMA, PRICE_CLOSE, 1);
+   para[11] = iMA(CurrencyPairs[i], PERIOD_D1,69,0, MODE_SMA, PRICE_CLOSE, 1);
+   para[12] = iMA(CurrencyPairs[i], PERIOD_D1,123,0, MODE_SMA, PRICE_CLOSE, 1);
+   para[13] = iStochastic(CurrencyPairs[i], PERIOD_D1,5,3,3,MODE_SMA,0,MODE_MAIN,1);
+   
+   
+   //Draw Pair Name
    color cor;
    if( iClose(CurrencyPairs[i], PERIOD_D1, 1) > iOpen(CurrencyPairs[i], PERIOD_D1, 1))
       cor=Green;
@@ -186,11 +125,8 @@ void handle0(int i)
    ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[0], OBJPROP_XDISTANCE, xpos);
    ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[0], OBJPROP_YDISTANCE, 70 + i * 30);
    xpos+=xstep;
-   return;
-}
-
-void handle1(int i)
-{
+   
+   //Draw Spread
    string str="";
    if(i<ArraySize(Spreads))
       str=Spreads[i];
@@ -202,119 +138,17 @@ void handle1(int i)
    ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[1], OBJPROP_XDISTANCE, xpos);
    ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[1], OBJPROP_YDISTANCE, 70 + i * 30);
    xpos+=xstep;
+   
+   //Draw Indicators
+   for(int j=2;j<idn;j++)
+   {
+      ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[j], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
+      ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[j], DoubleToStr( para[j], 4),9, "Arial Bold", Green);
+      ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[j], OBJPROP_CORNER, 0);
+      ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[j], OBJPROP_XDISTANCE, xpos);
+      ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[j], OBJPROP_YDISTANCE, 70 + i * 30);
+      xpos+=xstep;
+   }
    return;
 }
-
-void handle2(int i)
-{
-   double p2 = iATR(CurrencyPairs[i], PERIOD_D1, 1, 1);
-   double p3 = iATR(CurrencyPairs[i], PERIOD_D1, 5, 1);
-   double p4 = iATR(CurrencyPairs[i], PERIOD_D1, 66, 1);
-   
-   color cor2, cor3, cor4;
-   if(p2>p3)
-      cor2=Green;
-   else 
-      cor2=Red;
-      
-   if(p3>p4)
-   {
-      cor3=Green;
-      cor4=Red;
-   }
-   else
-   {
-      cor3=Red;
-      cor4=Green;
-   }
-   
-   ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[2], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
-   ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[2], DoubleToStr( p2, 4),9, "Arial Bold", cor2);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[2], OBJPROP_CORNER, 0);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[2], OBJPROP_XDISTANCE, xpos);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[2], OBJPROP_YDISTANCE, 70 + i * 30);
-   xpos+=xstep;
-     
-   ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[3], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
-   ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[3], DoubleToStr( p3, 4),9, "Arial Bold", cor3);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[3], OBJPROP_CORNER, 0);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[3], OBJPROP_XDISTANCE, xpos);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[3], OBJPROP_YDISTANCE, 70 + i * 30);
-   xpos+=xstep;
-   
-   ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[4], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
-   ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[4], DoubleToStr( p4, 4),9, "Arial Bold", cor4);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[4], OBJPROP_CORNER, 0);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[4], OBJPROP_XDISTANCE, xpos);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[4], OBJPROP_YDISTANCE, 70 + i * 30);
-   xpos+=xstep;
-   return;
-}
-
-void handle5(int i)
-{
-   // yesterday high low, the day before high low.
-   double p50 = iHigh(CurrencyPairs[i], PERIOD_D1, 1);
-   double p51 = iLow(CurrencyPairs[i], PERIOD_D1, 1);
-   
-   double p52 = iHigh(CurrencyPairs[i], PERIOD_D1, 2);
-   double p53 = iLow(CurrencyPairs[i], PERIOD_D1, 2);
-   
-   string strinside, stroutside;
-   color cor50, cor51;
-   if( p50<p52 && p51>p53)
-   {
-      cor50=Green;
-      strinside="Yes";
-   }else
-   {
-      cor50=Red;
-      strinside="Nop";
-   }
-   
-   if( p50>p52 && p51<p53)
-   {
-      cor51=Green;
-      stroutside="Yes";
-   }else
-   {
-      cor51=Red;
-      stroutside="Nop";
-   }
-   
-   ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[5], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
-   ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[5], strinside,9, "Arial Bold", cor50);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[5], OBJPROP_CORNER, 0);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[5], OBJPROP_XDISTANCE, xpos);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[5], OBJPROP_YDISTANCE, 70 + i * 30);
-   xpos+=xstep;
-      
-   ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[6], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
-   ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[6], stroutside,9, "Arial Bold", cor51);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[6], OBJPROP_CORNER, 0);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[6], OBJPROP_XDISTANCE, xpos);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[6], OBJPROP_YDISTANCE, 70 + i * 30);
-   xpos+=xstep;
-   
-   return;
-}
-
-void handle7(int i)
-{
-   color cor;
-   double p70 = iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN, 1);
-   if( p70 > 30)
-      cor=Green;
-   else
-      cor=Red;
-   ObjectCreate("tv."+CurrencyPairs[i]+"."+Indicators[7], OBJ_LABEL, WindowFind("Total View"), 0, 0);   
-   ObjectSetText("tv."+CurrencyPairs[i]+"."+Indicators[7], DoubleToStr( p70, 0),9, "Arial Bold", cor);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[7], OBJPROP_CORNER, 0);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[7], OBJPROP_XDISTANCE, xpos);
-   ObjectSet("tv."+CurrencyPairs[i]+"."+Indicators[7], OBJPROP_YDISTANCE, 70 + i * 30);
-   xpos+=xstep;
-   
-   return;
-}
-
 
