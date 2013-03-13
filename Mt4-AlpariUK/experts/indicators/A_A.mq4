@@ -102,9 +102,9 @@ void handle2(int i)
    para[2] = iClose(CurrencyPairs[i], PERIOD_D1,1);
    para[3] = MathMax(iClose(CurrencyPairs[i], PERIOD_D1,3), MathMax(iHigh(CurrencyPairs[i], PERIOD_D1,1), iHigh(CurrencyPairs[i], PERIOD_D1,2)));
    para[4] = MathMin(iClose(CurrencyPairs[i], PERIOD_D1,3), MathMin(iLow(CurrencyPairs[i], PERIOD_D1,1), iLow(CurrencyPairs[i], PERIOD_D1,2)));
-   para[5] = iHigh(CurrencyPairs[i], PERIOD_D1, iHighest(CurrencyPairs[i], PERIOD_D1, MODE_HIGH, 10, 1));
-   para[6] = iLow(CurrencyPairs[i], PERIOD_D1, iLowest(CurrencyPairs[i], PERIOD_D1, MODE_LOW, 10, 1));
-   para[7] = (para[3] - para[4]);
+   para[6] = iHigh(CurrencyPairs[i], PERIOD_D1, iHighest(CurrencyPairs[i], PERIOD_D1, MODE_HIGH, 10, 1));
+   para[7] = iLow(CurrencyPairs[i], PERIOD_D1, iLowest(CurrencyPairs[i], PERIOD_D1, MODE_LOW, 10, 1));
+   para[5] = (para[3] - para[4]);
    para[8] = iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN,1);
    para[9] = iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN,1)>iADX(CurrencyPairs[i], PERIOD_D1, 14, PRICE_CLOSE, MODE_MAIN,2);
    para[10] = iMA(CurrencyPairs[i], PERIOD_D1,22,0, MODE_SMA, PRICE_CLOSE, 1);
