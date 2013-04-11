@@ -19,6 +19,10 @@ int init()
   {
 //---- indicators
 //----
+   if(Period()==PERIOD_H4)
+   {
+      USA_Close=16;
+   }
    return(0);
   }
 //+------------------------------------------------------------------+
@@ -27,7 +31,7 @@ int init()
 int deinit()
   {
 //----
-   ObjectsDeleteAll();
+   ObjectsDeleteAll(-1,OBJ_TREND);
 //----
    return(0);
   }
@@ -73,7 +77,7 @@ int start()
          ldatehigh=High[ia2];
          ldatelow=Low[ia3];
          //Print("ldate:", TimeToStr(ldate)," lldate:", TimeToStr(lldate));
-         //Print("ldate ", TimeToStr(ldate)," ihigh", ldatehigh, " ib1 ", ib1, " ilow ", ldatelow);
+         //Print("ldate ", TimeToStr(Time[ia2])," ihigh", ldatehigh, " ib1 ", ib1, " ilow ", ldatelow);
          ib1 = iBarShift(NULL, 0, lldate+London_Open*3600);
          ib2 = iBarShift(NULL, 0, lldate+USA_Close*3600);
          
@@ -85,7 +89,7 @@ int start()
          ObjectSet("A Trend Line H:"+TimeToStr(today), OBJPROP_RAY, false); 
          ObjectCreate("A Trend Line L:"+TimeToStr(today),2, 0,Time[ia1], lldatelow -(lldatelow -ldatelow )*(ia1-ia5)/(ia3-ia5), today+86400,lldatelow -(lldatelow -ldatelow )*(ia0-ia5)/(ia3-ia5));
          ObjectSet("A Trend Line L:"+TimeToStr(today), OBJPROP_RAY, false);
-         ObjectSet("A Trend Line L:"+TimeToStr(today), OBJPROP_COLOR, Yellow);
+         ObjectSet("A Trend Line L:"+TimeToStr(today), OBJPROP_COLOR, Blue);
       }
       }
 //----
