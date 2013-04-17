@@ -70,8 +70,9 @@ int start()
    if(Period()>=PERIOD_D1) return;
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
+   //if(Volume[0]>1)return;
 //---- signal line is simple movimg average
-   for(i=0; i<limit; i++)
+   for(i=0; i<800; i++)
    {
       Buffer1[i]=iATR(NULL, NULL, 1, i);
       j=0;
