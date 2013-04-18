@@ -8,8 +8,10 @@
 extern double Lots               = 0.1;
 extern double MaximumRisk        = 0.02;
 extern double DecreaseFactor     = 3;
-extern double MovingPeriod       = 3;
-extern double MovingShift        = 1;
+extern int HistoryPeriod=90;
+
+
+double lastopentime=0;
 //+------------------------------------------------------------------+
 //| Calculate open positions                                         |
 //+------------------------------------------------------------------+
@@ -63,23 +65,46 @@ double LotsOptimized()
 //+------------------------------------------------------------------+
 void CheckForOpen()
   {
-   double mah,mal;
+   double mah,mal,avgrange=0;
    int    res;
+   bool buy=true, sell=true;
+   
 //---- go trading only for first tiks of new bar
 //   if(Volume[0]>1) return;
 //---- get Moving Average 
+   //int tt=TimeHour(Time[0]);
+   //if( tt <5||tt>18)return;
+   if(lastopentime==Time[0])return;
+   int j=0;
+   for(int k=0;k<HistoryPeriod;k++)
+      {
+         int ib=iBarShift(NULL, 0, Time[0]-PERIOD_D1*k*60,true);
+         if(ib!=-1)
+         {
+            avgrange+=High[ib]-Low[ib];
+            j++;
+         }     
+      }
+      
+    avgrange=avgrange/j;
+    
+   buy=Close[0]-Low[0]>avgrange;
+   sell=High[0]-Close[0]>avgrange;
+  
    mah=MathMax(High[1], High[2]);
    mal=MathMin(Low[1], Low[2]);
 //---- sell conditions
-   if(Close[0]<mal)  
+   if(sell)  
      {
-      res=OrderSend(Symbol(),OP_SELL,LotsOptimized(),Bid,3,0,0,"",MAGICMA,0,Red);
+      res=OrderSend(Symbol(),OP_SELL,LotsOptimized(),Bid,3,Bid+300*Point,Bid-1000*Point,"",MAGICMA,0,Red);
+      lastopentime=Time[0];
       return;
      }
 //---- buy conditions
-   if(Close[0]>mah)  
+   if(buy)  
      {
-      res=OrderSend(Symbol(),OP_BUY,LotsOptimized(),Ask,3,0,0,"",MAGICMA,0,Blue);
+      res=OrderSend(Symbol(),OP_BUY,LotsOptimized(),Ask,3,Ask-300*Point,Ask+1000*Point,"",MAGICMA,0,Blue);
+      lastopentime=Time[0];
       return;
      }
 //----
