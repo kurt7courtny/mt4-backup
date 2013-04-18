@@ -18,7 +18,7 @@ extern int HistoryPeriod=90;
 //---- buffers
 double Buffer1[];
 double Buffer2[];
-
+double lastime=0;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
@@ -71,9 +71,13 @@ int start()
    if(counted_bars>0) counted_bars--;
    int limit=Bars-counted_bars;
    //if(Volume[0]>1)return;
+   //if(lastime==Time[0])return;
+   //lastime=Time[0];
 //---- signal line is simple movimg average
-   for(i=0; i<800; i++)
+   //Print("limit:", limit);
+   for(i=0; i<limit; i++)
    {
+      price=0;
       Buffer1[i]=iATR(NULL, NULL, 1, i);
       j=0;
       for(k=0;k<HistoryPeriod;k++)
@@ -81,12 +85,12 @@ int start()
          int ib=iBarShift(NULL, 0, Time[i]-PERIOD_D1*k*60,true);
          if(ib!=-1)
          {
-            Buffer2[i]+=High[ib]-Low[ib];
+            price+=High[ib]-Low[ib];
             j++;       
          }     
       }
       
-      Buffer2[i]=Buffer2[i]/j;
+      Buffer2[i]=price/j;
       //Print("bufer2,"+i+","+j+","+Buffer2[i]);
     
    }
