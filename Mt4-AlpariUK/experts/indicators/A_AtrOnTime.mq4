@@ -20,7 +20,6 @@ double Buffer1[];
 double Buffer2[];
 double Buffer3[];
 double lastime=0;
-double at=30;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
@@ -37,6 +36,9 @@ int init()
    SetIndexStyle(0,DRAW_HISTOGRAM);
    SetIndexStyle(1,DRAW_LINE);
    SetIndexStyle(2,DRAW_HISTOGRAM);
+   
+   SetLevelValue(0, 100*Point);
+   SetLevelStyle(0, 1, Blue);
    //SetIndexShift(1, PERIOD_D1 / Period());
    /*
    int d[8], index;
@@ -97,7 +99,7 @@ int start()
       }
       Buffer2[i]=price/j;
       
-      if( Buffer2[i] < Buffer1[i] + at*Point)
+      if( Buffer2[i] < Buffer1[i])
          Buffer1[i]=0;
       else
          Buffer3[i]=0;
