@@ -38,7 +38,7 @@ int init()
    SetIndexStyle(2,DRAW_HISTOGRAM);
    
    SetLevelValue(0, 100*Point);
-   SetLevelStyle(0, 1, Blue);
+   SetLevelStyle(1, 1, Blue);
    //SetIndexShift(1, PERIOD_D1 / Period());
    /*
    int d[8], index;
