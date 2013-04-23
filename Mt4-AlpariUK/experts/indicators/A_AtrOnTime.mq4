@@ -18,7 +18,9 @@ extern int HistoryPeriod=90;
 //---- buffers
 double Buffer1[];
 double Buffer2[];
+double Buffer3[];
 double lastime=0;
+double at=30;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
@@ -26,13 +28,15 @@ int init()
   {
    string short_name="历史波动区间 ", in_name;
 //---- 2 additional buffers are used for counting.
-   IndicatorBuffers(2);
+   IndicatorBuffers(3);
    SetIndexBuffer(0, Buffer1);
    SetIndexBuffer(1, Buffer2);
+   SetIndexBuffer(2, Buffer3);
    
 //---- indicator lines
    SetIndexStyle(0,DRAW_HISTOGRAM);
    SetIndexStyle(1,DRAW_LINE);
+   SetIndexStyle(2,DRAW_HISTOGRAM);
    //SetIndexShift(1, PERIOD_D1 / Period());
    /*
    int d[8], index;
@@ -56,6 +60,7 @@ int init()
    IndicatorShortName(short_name);
    SetIndexLabel(0,short_name+"today");
    SetIndexLabel(1,short_name+"Avg in ("+HistoryPeriod+") Days");
+   SetIndexLabel(2,short_name+"today");
    return(0);
   }
 //+------------------------------------------------------------------+
@@ -79,6 +84,7 @@ int start()
    {
       price=0;
       Buffer1[i]=iATR(NULL, NULL, 1, i);
+      Buffer3[i]=Buffer1[i];
       j=0;
       for(k=0;k<HistoryPeriod;k++)
       {
@@ -89,8 +95,12 @@ int start()
             j++;       
          }     
       }
-      
       Buffer2[i]=price/j;
+      
+      if( Buffer2[i] < Buffer1[i] + at*Point)
+         Buffer1[i]=0;
+      else
+         Buffer3[i]=0;
       //Print("bufer2,"+i+","+j+","+Buffer2[i]);
     
    }
