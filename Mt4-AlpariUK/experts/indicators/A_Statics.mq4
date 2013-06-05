@@ -14,6 +14,7 @@ int init()
   {
 //---- indicators
       s1();
+      s2();
 //----
    return(0);
   }
@@ -59,92 +60,73 @@ int start()
 //+------------------------------------------------------------------+
 
 // ma judge trend all, uptrend, downtrend, uptrend u
-double ss1[9];
-
 int s1()
 {
-   ss1[0]=Bars;
+   double ss1[9];
    for( int i=0; i < Bars;i++)
    {
       if( TimeYear(Time[i])<2009)
          continue;
-      double ma=iMA(NULL, NULL, 16, 1, MODE_SMA, PRICE_CLOSE, i);
+      double ma=iMA(NULL, NULL, 16, 0, MODE_SMA, PRICE_CLOSE, i);
+      ss1[0]++;
       if(Open[i]>ma)
       {
          ss1[1]++;
          if(Close[i]>Open[i])
          {
-            ss1[3]+=Close[i]-Open[i];
-            ss1[7]++;
+            ss1[3]++;
          }
          else
          {
-            ss1[4]+=Close[i]-Open[i];
-            ss1[8]++;
+            ss1[4]++;
          }
       }
       else
       {
          ss1[2]++;
-         if(Close[i]<Open[i])
-            ss1[5]+=Close[i]-Open[i];
+         if(Close[i]>Open[i])
+            ss1[5]++;
          else
-            ss1[6]+=Close[i]-Open[i]; 
+            ss1[6]++;
       }
       
    }
-   ss1[3]/=ss1[7];
-   ss1[4]/=ss1[8];
-   ss1[5]/=ss1[2];
-   ss1[6]/=ss1[2];
-      // down trend
-      /*
-      if(Open[i] < ma)
+   print_array("ma",ss1);
+   return(0);
+}
+
+// ma judge trend all, uptrend, downtrend, uptrend u
+int s2()
+{
+   double ss2[9];
+   for( int i=0; i < Bars;i++)
+   {
+      if( TimeYear(Time[i])<2009)
+         continue;
+      double macd=iMACD(NULL, NULL, 5, 16, 1, PRICE_CLOSE, MODE_MAIN,i);
+      ss2[0]++;
+      if(macd>0.002)
       {
-         ss1[1]++;
-         if( Close[i]>Open[i])
-            tdu+=1;
-         else
-            tdd+=1;
-         if( High[i]>High[i+1] && Close[i]<Open[i])
+         ss2[1]++;
+         if(Close[i]>Open[i])
          {
-            ObjectDelete( "a_s" + TimeToStr(Time[i]));
-            ObjectCreate( "a_s" + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], High[i]); 
-            ObjectSet("a_s" + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 242);
-            tv1+=1;
+            ss2[3]++;
          }
-         if( High[i]>High[i+1] && Close[i]>Open[i])
+         else
          {
-            ObjectDelete( "a_s" + TimeToStr(Time[i]));
-            ObjectCreate( "a_s" + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], High[i]); 
-            ObjectSet("a_s" + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 68);
-            tf1+=1;
+            ss2[4]++;
          }
       }
       else
       {
-         t2+=1;
-         if( Close[i]>Open[i])
-            tuu+=1;
+         ss2[2]++;
+         if(Close[i]>Open[i])
+            ss2[5]++;
          else
-            tud+=1;
-         if( Low[i]<Low[i+1] && Close[i]>Open[i])
-         {
-            ObjectDelete( "a_s" + TimeToStr(Time[i]));
-            ObjectCreate( "a_s" + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], Low[i]); 
-            ObjectSet("a_s" + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 241);
-            tv2+=1;
-         }
-         if( Low[i]<Low[i+1] && Close[i]<Open[i])
-         {
-            ObjectDelete( "a_s" + TimeToStr(Time[i]));
-            ObjectCreate( "a_s" + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], Low[i]); 
-            ObjectSet("a_s" + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 67);
-            tf2+=1;
-         }
-      }   
+            ss2[6]++;
+      }
+      
    }
-   */
-   print_array("ma",ss1);
+   print_array("macd",ss2);
    return(0);
 }
