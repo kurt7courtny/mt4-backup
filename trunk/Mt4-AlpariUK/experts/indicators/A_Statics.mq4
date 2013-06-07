@@ -15,7 +15,8 @@ int init()
 //---- indicators
       //s1();
       //s2();
-      s3();
+      //s3();
+      s4();
 //----
    return(0);
   }
@@ -203,5 +204,39 @@ int s3()
       
    }
    print_array("turtle",ss3);
+   return(0);
+}
+
+
+// turtles trans trend
+int s4()
+{
+   int HPeriod=5, LPeriod=5, shift=5;
+   double ss4[15];
+   for(int i=Bars;i>1;i--)
+   {
+      if( TimeYear(Time[i])<2009)
+         continue;
+      ss4[0]++;
+      double HighBuffer=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+shift)];
+      double LowBuffer =Low[iLowest(NULL, 0, MODE_LOW, LPeriod, i+shift)];
+      if( Open[i]>HighBuffer)
+      {
+         ss4[1]++;
+         if( Close[i]>Open[i])
+            ss4[3]+=Close[i]-Open[i];
+         else
+            ss4[4]+=Close[i]-Open[i];
+         
+      }else if( Open[i]<LowBuffer)
+      {
+         ss4[2]++;
+         if( Close[i]>Open[i])
+            ss4[5]++;
+         else
+            ss4[6]++;
+      }
+   }
+   print_array("trans turtle",ss4);
    return(0);
 }
