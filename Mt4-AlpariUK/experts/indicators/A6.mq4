@@ -18,7 +18,7 @@ extern bool		PopupAlert	= false;
 
 extern int HPeriod=5;
 extern int LPeriod=5;
-extern int shift=5;
+extern int shift=1;
 
 //---- buffers
 double HighBuffer[];
