@@ -16,8 +16,9 @@
 extern bool		EmailAlert	= false;
 extern bool		PopupAlert	= false;
 
-extern int HPeriod=4;
-extern int LPeriod=4;
+extern int HPeriod=5;
+extern int LPeriod=5;
+extern int shift=5;
 
 //---- buffers
 double HighBuffer[];
@@ -74,8 +75,8 @@ int start()
 //---- signal line is simple movimg average
    for(i=0; i<limit; i++)
    {
-      HighBuffer[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+1)];
-      LowBuffer[i] =Low[iLowest(NULL, 0, MODE_LOW, LPeriod, i+1)];
+      HighBuffer[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+shift)];
+      LowBuffer[i] =Low[iLowest(NULL, 0, MODE_LOW, LPeriod, i+shift)];
       if( Open[0] > HighBuffer[1] && lastalert != Time[0])
       {
          sMessage = sMessage + DoubleToStr(HPeriod,0) + " High@" + DoubleToStr(Ask,Digits);
