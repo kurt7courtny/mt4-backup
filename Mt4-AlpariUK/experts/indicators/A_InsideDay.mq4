@@ -44,6 +44,8 @@ int start()
    {
       if( High[i+1] < High[i+2] && Low[i+1] > Low[i+2])
       {
+         if(Period()==PERIOD_H1 && TimeHour(Time[i])<=9)
+            continue;
          ObjectDelete( "oni" + i);
          ObjectCreate( "oni" + i, OBJ_ARROW, 0, Time[i+1], Low[i+1]); 
          ObjectSet("oni" + i, OBJPROP_ARROWCODE, 251);
