@@ -13,10 +13,10 @@
 int init()
   {
 //---- indicators
-      //s1();
+      s1();
       //s2();
       //s3();
-      s4();
+      //s4();
 //----
    return(0);
   }
@@ -67,23 +67,35 @@ int s1()
    double ss1[9];
    for(int i=Bars;i>1;i--)
    {
-      if( TimeYear(Time[i])<2009)
-         continue;
-      double ma=iMA(NULL, NULL, 16, 0, MODE_SMA, PRICE_CLOSE, i+1);
+      //if( TimeYear(Time[i])<2009)
+      //   continue;
+      double ma1=iMA(NULL, NULL, 16, 0, MODE_SMA, PRICE_CLOSE, i+1);
+      double ma2=iMA(NULL, NULL, 16, 0, MODE_SMA, PRICE_LOW, i+1);
       ss1[0]++;
-      if(Open[i]>ma)
+      if( High[i]>ma1 && Low[i]<ma1)
+      {
+         if(Close[i]>Open[i])
+            ss1[1]++;
+         else
+            ss1[2]++;
+      }
+      
+      /*
+      if(Close[i]>ma1)
       {
          ss1[1]++;
+         ss1[7]+=High[i]-Open[i];
+         ss1[8]+=Open[i]-Low[i];
          if(Close[i]>Open[i])
          {
-            ss1[3]++;
+            ss1[3]++;  
          }
          else
          {
             ss1[4]++;
          }
       }
-      else
+      else if(Close[i]<ma2)
       {
          ss1[2]++;
          if(Close[i]>Open[i])
@@ -91,6 +103,7 @@ int s1()
          else
             ss1[6]++;
       }
+      */
       
    }
    print_array("ma",ss1);
