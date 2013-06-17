@@ -19,6 +19,7 @@ extern double PP=2;
 //---- buffers
 double Buffer1[];
 double Buffer2[];
+double Buffer3[];
 
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
@@ -27,15 +28,15 @@ int init()
   {
    string short_name="²¨¶¯Çø¼ä", in_name;
 //---- 2 additional buffers are used for counting.
-   IndicatorBuffers(2);
+   IndicatorBuffers(3);
    SetIndexBuffer(0, Buffer1);
    SetIndexBuffer(1, Buffer2);
-//   SetIndexBuffer(2, Buffer3);
+   //SetIndexBuffer(2, Buffer3);
    
 //---- indicator lines
    SetIndexStyle(0,DRAW_HISTOGRAM);
    SetIndexStyle(1,DRAW_LINE);
-//   SetIndexStyle(2,DRAW_LINE);
+   SetIndexStyle(2,DRAW_LINE);
    /*
    int d[8], index;
    //---- name for DataWindow and indicator subwindow label
@@ -58,7 +59,7 @@ int init()
    IndicatorShortName(short_name);
    SetIndexLabel(0,short_name+"today("+HPeriod+")");
    SetIndexLabel(1,short_name+"short term("+PP+")");
-//   SetIndexLabel(2,short_name+"long term("+LongPeriod+")");
+   SetIndexLabel(2,short_name+"yestoday R");
    return(0);
   }
 //+------------------------------------------------------------------+
@@ -77,6 +78,7 @@ int start()
    {
       Buffer1[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+1)]-Low[iLowest(NULL, 0, MODE_LOW, HPeriod, i+1)];
       Buffer2[i]=PP*iATR(NULL, 0, HPeriod,i+1);
+      Buffer3[i]=iATR(NULL, 0, 1, i+1);
    }
 //----
    return(0);

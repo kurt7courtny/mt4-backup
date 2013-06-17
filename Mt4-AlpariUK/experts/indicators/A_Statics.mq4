@@ -13,10 +13,11 @@
 int init()
   {
 //---- indicators
-      s1();
+      //s1();
       //s2();
       //s3();
       //s4();
+      s5();
 //----
    return(0);
   }
@@ -251,5 +252,35 @@ int s4()
       }
    }
    print_array("trans turtle",ss4);
+   return(0);
+}
+
+// custom break indicator statics
+int s5()
+{
+   int cc=3;
+   double ss5[9];
+   int iflag=0;
+   for(int i=Bars;i>1;i--)
+   {
+      //if( TimeYear(Time[i])<2013)
+      //   continue;
+      ss5[0]++;
+      if(iCustom(NULL, 0, "A_HLRange", 5, 2, 0, i) < iCustom(NULL, 0, "A_HLRange", 5, 2, 1, i))
+      {
+         if(iflag==cc)
+            draw_arrow(Time[i], Low[i], 242);
+         iflag++;        
+      }
+      else
+      {
+         if(iflag>=cc)
+         {
+            ss5[1]++;     
+         }
+         iflag=0;
+      }
+   }
+   print_array("custom break",ss5);
    return(0);
 }
