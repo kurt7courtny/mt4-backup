@@ -258,7 +258,7 @@ int s4()
 // custom break indicator statics
 int s5()
 {
-   int cc=3;
+   int cc=2;
    double ss5[9];
    int iflag=0;
    for(int i=Bars;i>1;i--)
@@ -266,11 +266,11 @@ int s5()
       //if( TimeYear(Time[i])<2013)
       //   continue;
       ss5[0]++;
-      if(iCustom(NULL, 0, "A_HLRange", 5, 2, 0, i) < iCustom(NULL, 0, "A_HLRange", 5, 2, 1, i))
+      if(iCustom(NULL, 0, "A_HLRange", 5, 2, 0, i) < iCustom(NULL, 0, "A_HLRange", 5, 2, 1, i) && iCustom(NULL, 0, "A_HLRange", 5, 2, 1, i) < iCustom(NULL, 0, "A_HLRange", 5, 2, 1, i+1))
       {
+         iflag++;        
          if(iflag==cc)
             draw_arrow(Time[i], Low[i], 242);
-         iflag++;        
       }
       else
       {
