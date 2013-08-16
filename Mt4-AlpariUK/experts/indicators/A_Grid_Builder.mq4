@@ -8,7 +8,7 @@
 
 #property indicator_chart_window
 #property indicator_color1 DodgerBlue
-extern int GridSpace = 50;
+extern int GridSpace = 500;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
