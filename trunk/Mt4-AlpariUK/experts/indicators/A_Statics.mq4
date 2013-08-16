@@ -13,11 +13,13 @@
 int init()
   {
 //---- indicators
+      s0();
       //s1();
       //s2();
       //s3();
       //s4();
-      s5();
+      //s5();
+      //s6();
 //----
    return(0);
   }
@@ -61,6 +63,48 @@ int start()
    return(0);
   }
 //+------------------------------------------------------------------+
+// 20 , 80 
+int s0()
+{
+   double ub=0.8, lb=0.2, ss0[9];
+   //Print("cp", Bars);
+   for(int i=1;i<Bars-1;i++)
+   {
+      if( TimeYear(Time[i])<2013)
+         continue; 
+      double cp = (Close[i+1]-Low[i+1])/(High[i+1]-Low[i+1]), op = (Open[i+1]-Low[i+1])/(High[i+1]-Low[i+1]);
+      ss0[0]++;
+      //Print("cp", cp);
+      if(cp>ub && op<lb)
+      {
+         ss0[1]++;
+         if(High[i]>High[i+1])
+         {
+            if( Close[i] < High[i+1])
+               ss0[3]++;
+            else
+               ss0[4]++;
+            draw_arrow(Time[i], Low[i], 241);   
+         }
+      }
+      
+      if(cp<lb && op>ub)
+      {
+         ss0[2]++;
+         if(Low[i]<Low[i+1])
+         {
+            if( Close[i] > Low[i+1])
+               ss0[5]++;
+            else 
+               ss0[6]++;
+            draw_arrow(Time[i], Low[i], 242);
+         }
+      }
+   }   
+   print_array("20-80",ss0);
+   return(0);
+}
+
 
 // ma judge trend all, uptrend, downtrend, uptrend u
 int s1()
@@ -282,5 +326,48 @@ int s5()
       }
    }
    print_array("custom break",ss5);
+   return(0);
+}
+
+//+------------------------------------------------------------------+
+// tt
+int s6()
+{
+   double ub=0.8, lb=0.2, ss6[9], ma_period=14;
+   //Print("cp", Bars);
+   for(int i=1;i<Bars-1;i++)
+   {
+      if( TimeYear(Time[i])<2013)
+         continue; 
+      double ma = iMA( NULL, 0, ma_period, 1, MODE_SMA, PRICE_CLOSE, i);
+      ss6[0]++;
+      //Print("cp", cp);
+      if(Open[i] < ma)
+      {
+         ss6[1]++;
+         if(High[i]>High[i+1])
+         {
+            if( Close[i] < High[i+1])
+               ss6[3]++;
+            else
+               ss6[4]++;
+            draw_arrow(Time[i], Low[i], 241);   
+         }
+      }
+      
+      if(Open[i] > ma)
+      {
+         ss6[2]++;
+         if(Low[i]<Low[i+1])
+         {
+            if( Close[i] > Low[i+1])
+               ss6[5]++;
+            else 
+               ss6[6]++;
+            draw_arrow(Time[i], Low[i], 242);
+         }
+      }
+   }   
+   print_array("ma",ss6);
    return(0);
 }
