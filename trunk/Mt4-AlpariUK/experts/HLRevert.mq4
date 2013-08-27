@@ -80,19 +80,19 @@ void CheckForOpen()
    lb=iLow( NULL, PERIOD_D1, iLowest( NULL,PERIOD_D1,MODE_LOW , HLPeriod, 2));
    ly=iLow( NULL, PERIOD_D1, 1);
    
-   if( hy > hb )
+   if( hy > hb && hb!= iHigh( NULL, PERIOD_D1, 2))
    {
-      res=OrderSend(Symbol(),OP_SELLLIMIT,LotsOptimized(), hb-Point*pp,3, hy, ly, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Red);
-      lastopentime=iTime(NULL, PERIOD_D1,0);
-      return;
+      res=OrderSend(Symbol(),OP_SELLSTOP,LotsOptimized(), hb-Point*pp,3, hy, ly, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Red);
+      //return;
    }
    
-   if( ly < lb)
+   if( ly < lb && lb!= iLow( NULL, PERIOD_D1, 2))
    {
-      res=OrderSend(Symbol(),OP_BUYLIMIT,LotsOptimized(), lb+Point*pp,3, ly, hy, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Blue);
-      lastopentime=iTime(NULL, PERIOD_D1,0);
-      return;   
+      res=OrderSend(Symbol(),OP_BUYSTOP,LotsOptimized(), lb+Point*pp,3, ly, hy, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Blue);
+      //return;   
    }
+   lastopentime=iTime(NULL, PERIOD_D1,0);
+   Print("hb:"+hb+" hy:"+hy+" lb:"+lb+" ly:"+ly);
 //----
   }
 //+------------------------------------------------------------------+
