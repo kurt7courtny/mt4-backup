@@ -13,13 +13,13 @@
 int init()
   {
 //---- indicators
-      s0();
+      //s0();
       //s1();
       //s2();
       //s3();
       //s4();
       //s5();
-      //s6();
+      s6();
 //----
    return(0);
   }
@@ -333,7 +333,7 @@ int s5()
 // tt
 int s6()
 {
-   double ub=0.8, lb=0.2, ss6[9], ma_period=14;
+   double ub=0.8, lb=0.2, ss6[9], ma_period=19;
    //Print("cp", Bars);
    for(int i=1;i<Bars-1;i++)
    {
