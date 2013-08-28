@@ -82,13 +82,19 @@ void CheckForOpen()
    
    if( hy > hb && hb!= iHigh( NULL, PERIOD_D1, 2))
    {
-      res=OrderSend(Symbol(),OP_SELLSTOP,LotsOptimized(), hb-Point*pp,3, hy, ly, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Red);
+      if( Close[0] > hb-Point*pp) 
+         res=OrderSend(Symbol(),OP_SELLSTOP,LotsOptimized(), hb-Point*pp,3, hy, ly, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Red);
+      else
+         res=OrderSend(Symbol(),OP_SELLLIMIT,LotsOptimized(), hb-Point*pp,3, hy, ly, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Red);
       //return;
    }
    
    if( ly < lb && lb!= iLow( NULL, PERIOD_D1, 2))
    {
-      res=OrderSend(Symbol(),OP_BUYSTOP,LotsOptimized(), lb+Point*pp,3, ly, hy, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Blue);
+      if( Close[0] < lb+Point*pp)
+         res=OrderSend(Symbol(),OP_BUYSTOP,LotsOptimized(), lb+Point*pp,3, ly, hy, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Blue);
+      else
+         res=OrderSend(Symbol(),OP_BUYLIMIT,LotsOptimized(), lb+Point*pp,3, ly, hy, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Blue);
       //return;   
    }
    lastopentime=iTime(NULL, PERIOD_D1,0);
