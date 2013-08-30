@@ -8,8 +8,10 @@
 
 #property indicator_chart_window
 
-double  London_Open=7;
-double  USA_Close=18; //since this use M5 data to find OHLC D1 candle so london close is 11:55 is the same as 12:00
+#define cor1 Lime
+#define cor2 Yellow
+#define cor3 Red
+#define cor4 Green
 
 int init()
   {
@@ -43,16 +45,35 @@ void drawcandle(int n)
 {
    //Print("timehour:", TimeHour(Time[n]));
    string candledatestr=TimeToStr( Time[n]);
-   double openprice=Open[n];
-   double closeprice=Close[n];
    double candledate=Time[n];
+   
+   double openprice=Open[n];
+   double openpricey=Open[n+1];
+   double closeprice=Close[n];
+   double closepricey=Close[n+1];
    double highestprice=High[n];
    double highestpricey=High[n+1];
    double lowestprice=Low[n];
    double lowestpricey=Low[n+1];
    
+   /*
+      STICKLINE(H>REF(H,1) AND C>REF(C,1) AND C>REF(O,1),CLOSE,OPEN,4,0),COLORFF00FF;
+   */
+   if( highestprice>highestpricey && closeprice>closepricey && closeprice>openpricey)
+   {
+      if(ObjectFind(candledatestr+" hlc")==-1) ObjectCreate(candledatestr+" hlc", OBJ_TREND, 0, 0, 0);
+      ObjectSet(candledatestr+" hlc", OBJPROP_PRICE1, openprice);
+      ObjectSet(candledatestr+" hlc", OBJPROP_PRICE2, closeprice);
+      ObjectSet(candledatestr+" hlc", OBJPROP_TIME1, candledate);
+      ObjectSet(candledatestr+" hlc", OBJPROP_TIME2, candledate);
+      ObjectSet(candledatestr+" hlc", OBJPROP_RAY, false);
+      ObjectSet(candledatestr+" hlc", OBJPROP_WIDTH, 5);
+      ObjectSet(candledatestr+" hlc", OBJPROP_COLOR, cor1);
+      return;
+   }
    
-   if(openprice>closeprice && lowestprice<lowestpricey)
+   //      STICKLINE(L<REF(L,1) AND C<REF(C,1) AND C<REF(O,1),CLOSE,OPEN,4,0),COLOR00FF00;
+   if( lowestprice<lowestpricey && closeprice<closepricey && closeprice<openpricey)
    {
       if(ObjectFind(candledatestr+" hlc")==-1) ObjectCreate(candledatestr+" hlc", OBJ_TREND, 0, 0, 0);
       ObjectSet(candledatestr+" hlc", OBJPROP_PRICE1, openprice);
@@ -62,11 +83,12 @@ void drawcandle(int n)
       ObjectSet(candledatestr+" hlc", OBJPROP_RAY, false);
       ObjectSet(candledatestr+" hlc", OBJPROP_BACK, true);
       ObjectSet(candledatestr+" hlc", OBJPROP_WIDTH, 5);
-      ObjectSet(candledatestr+" hlc", OBJPROP_COLOR, Red);
+      ObjectSet(candledatestr+" hlc", OBJPROP_COLOR, cor2);
+      return;
    }
 
-   //plot bull candle body
-   if(openprice<closeprice && highestprice>highestpricey)
+   //      STICKLINE(C>REF(C,1) AND C>REF(O,1) AND O<REF(C,1) AND O<REF(O,1),C,O,4,0),COLORRED;   
+   if( closeprice>closepricey && closeprice<openpricey && openprice<closepricey && openprice<openpricey)
    {
       if(ObjectFind(candledatestr+" hlc")==-1) ObjectCreate(candledatestr+" hlc", OBJ_TREND, 0, 0, 0);
       ObjectSet(candledatestr+" hlc", OBJPROP_PRICE1, openprice);
@@ -74,9 +96,28 @@ void drawcandle(int n)
       ObjectSet(candledatestr+" hlc", OBJPROP_TIME1, candledate);
       ObjectSet(candledatestr+" hlc", OBJPROP_TIME2, candledate);
       ObjectSet(candledatestr+" hlc", OBJPROP_RAY, false);
+      ObjectSet(candledatestr+" hlc", OBJPROP_BACK, true);
       ObjectSet(candledatestr+" hlc", OBJPROP_WIDTH, 5);
-      ObjectSet(candledatestr+" hlc", OBJPROP_COLOR, Green);
+      ObjectSet(candledatestr+" hlc", OBJPROP_COLOR, cor3);
+      return;
    }
+   
+   //      STICKLINE(C<REF(C,1) AND C<REF(O,1) AND O>REF(C,1) AND O>REF(O,1),C,O,4,0),COLOR000000;
+   if( closeprice<closepricey && closeprice<openpricey && openprice<closepricey && openprice>openpricey)
+   {
+      if(ObjectFind(candledatestr+" hlc")==-1) ObjectCreate(candledatestr+" hlc", OBJ_TREND, 0, 0, 0);
+      ObjectSet(candledatestr+" hlc", OBJPROP_PRICE1, openprice);
+      ObjectSet(candledatestr+" hlc", OBJPROP_PRICE2, closeprice);
+      ObjectSet(candledatestr+" hlc", OBJPROP_TIME1, candledate);
+      ObjectSet(candledatestr+" hlc", OBJPROP_TIME2, candledate);
+      ObjectSet(candledatestr+" hlc", OBJPROP_RAY, false);
+      ObjectSet(candledatestr+" hlc", OBJPROP_BACK, true);
+      ObjectSet(candledatestr+" hlc", OBJPROP_WIDTH, 5);
+      ObjectSet(candledatestr+" hlc", OBJPROP_COLOR, cor4);
+      return;
+   }
+   
+   if(ObjectFind(candledatestr+" hlc")!=-1) ObjectDelete(candledatestr+" hlc");
    return;
 }
 
