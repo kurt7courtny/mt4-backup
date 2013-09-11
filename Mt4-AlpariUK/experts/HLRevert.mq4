@@ -8,7 +8,8 @@
 extern double Lots               = 0.1;
 extern double MaximumRisk        = 0.02;
 extern double DecreaseFactor     = 3;
-extern int HLPeriod              = 10;
+extern int HLPeriod              = 15;
+extern int HLPeriod2             = 20;
 extern int pp                    = 50;              // point of over
 
 double lastopentime=0;
@@ -66,7 +67,7 @@ double LotsOptimized()
 //+------------------------------------------------------------------+
 void CheckForOpen()
   {
-   double hb,lb,hy,ly;
+   double hb,lb,hy,ly,hb2,lb2;
    int    res;
    
 //---- go trading only for first tiks of new bar
@@ -76,11 +77,13 @@ void CheckForOpen()
    //if( tt <5||tt>18)return;
    if(lastopentime==iTime(NULL, PERIOD_D1,0))return;
    hb=iHigh(NULL, PERIOD_D1, iHighest(NULL,PERIOD_D1,MODE_HIGH, HLPeriod, 2));
+   hb2=iHigh(NULL, PERIOD_D1, iHighest(NULL,PERIOD_D1,MODE_HIGH, HLPeriod2, 2));
    hy=iHigh( NULL, PERIOD_D1, 1);
    lb=iLow( NULL, PERIOD_D1, iLowest( NULL,PERIOD_D1,MODE_LOW , HLPeriod, 2));
+   lb2=iLow( NULL, PERIOD_D1, iLowest( NULL,PERIOD_D1,MODE_LOW , HLPeriod2, 2));
    ly=iLow( NULL, PERIOD_D1, 1);
    
-   if( hy > hb && hb!= iHigh( NULL, PERIOD_D1, 2))
+   if( hy > hb && hb!= iHigh( NULL, PERIOD_D1, 2) && hb2==hb)
    {
       if( Close[0] > hb-Point*pp) 
          res=OrderSend(Symbol(),OP_SELLSTOP,LotsOptimized(), hb-Point*pp,3, hy, ly, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Red);
@@ -89,7 +92,7 @@ void CheckForOpen()
       //return;
    }
    
-   if( ly < lb && lb!= iLow( NULL, PERIOD_D1, 2))
+   if( ly < lb && lb!= iLow( NULL, PERIOD_D1, 2) && lb==lb2)
    {
       if( Close[0] < lb+Point*pp)
          res=OrderSend(Symbol(),OP_BUYSTOP,LotsOptimized(), lb+Point*pp,3, ly, hy, "",MAGICMA, iTime(NULL, PERIOD_D1,0)+86400,Blue);
