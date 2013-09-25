@@ -31,7 +31,7 @@ int init()
    IndicatorBuffers(3);
    SetIndexBuffer(0, Buffer1);
    SetIndexBuffer(1, Buffer2);
-   //SetIndexBuffer(2, Buffer3);
+   SetIndexBuffer(2, Buffer3);
    
 //---- indicator lines
    SetIndexStyle(0,DRAW_HISTOGRAM);
