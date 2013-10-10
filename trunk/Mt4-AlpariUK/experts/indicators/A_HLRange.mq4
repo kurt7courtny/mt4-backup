@@ -7,7 +7,7 @@
 #property link      "http://www.metaquotes.net/"
 
 #property indicator_separate_window
-#property indicator_buffers 3
+#property indicator_buffers 2
 #property indicator_color1 Blue
 #property indicator_color2 Red
 #property indicator_color3 Green
@@ -28,7 +28,7 @@ int init()
   {
    string short_name="²¨¶¯Çø¼ä", in_name;
 //---- 2 additional buffers are used for counting.
-   IndicatorBuffers(3);
+   IndicatorBuffers(2);
    SetIndexBuffer(0, Buffer1);
    SetIndexBuffer(1, Buffer2);
    SetIndexBuffer(2, Buffer3);
@@ -78,7 +78,7 @@ int start()
    {
       Buffer1[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+1)]-Low[iLowest(NULL, 0, MODE_LOW, HPeriod, i+1)];
       Buffer2[i]=PP*iATR(NULL, 0, HPeriod,i+1);
-      Buffer3[i]=iATR(NULL, 0, 1, i+1);
+      //Buffer3[i]=iATR(NULL, 0, 1, i+1);
    }
 //----
    return(0);

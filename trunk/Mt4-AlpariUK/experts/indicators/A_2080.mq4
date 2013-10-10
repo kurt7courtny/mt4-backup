@@ -9,6 +9,7 @@
 #property indicator_chart_window
 
 double p1=0.8, p2=0.2;
+int p3=15, p4=20;
 string strname="20-80:";
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
@@ -49,7 +50,7 @@ int start()
       double datr=High[i]-Low[i], dco=Close[i]-Open[i];
       if( dco > 0)
       {
-         if( (Close[i]-Low[i])/datr > p1 && (Open[i]-Low[i])/datr < p2)
+         if( (Close[i]-Low[i])/datr > p1)// && Close[i] > High[iHighest(NULL,0,MODE_HIGH,p3,2+i)] && iHighest(NULL,0,MODE_HIGH,p3,2+i)==iHighest(NULL,0,MODE_HIGH,p4,2+i))// && (Open[i]-Low[i])/datr < p2)
          {
             ObjectDelete( strname + TimeToStr(Time[i]));
             ObjectCreate( strname + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], Low[i]); 
@@ -58,7 +59,7 @@ int start()
       }
       else
       {
-         if( (Close[i]-Low[i])/datr < p2 && (Open[i]-Low[i])/datr > p1)
+         if( (Close[i]-Low[i])/datr < p2)// && Close[i] < Low[iLowest(NULL,0,MODE_LOW,p3,2+i)] && iLowest(NULL,0,MODE_LOW,p3,2+i)==iLowest(NULL,0,MODE_LOW,p4,2+i))// && (Open[i]-Low[i])/datr > p1)
          {
             ObjectDelete( strname + TimeToStr(Time[i]));
             ObjectCreate( strname + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], Low[i]); 
