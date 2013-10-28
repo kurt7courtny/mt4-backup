@@ -1,8 +1,5 @@
-/*
-*/
-#property copyright "Copyright ?2005, Nick Bilak"
-#property link      "http://metatrader.50webs.com/"
 
+//
 #property indicator_chart_window
 #property indicator_buffers 1
 #property indicator_color1 Red
@@ -21,7 +18,7 @@ extern string		纽約收市	   = "15:00";
 extern int		   预开分钟	   = 30;	       //离开市多少时间
 
 //---- input parameters
-extern double       服务器时区=3;    //欧洲
+extern double       服务器时区=-5;    //美国
 extern double       本地时区=8;
 extern bool         ShowLocal_GMT_BROK=false;  //修改
 extern bool         亚洲区域=true;
@@ -68,83 +65,12 @@ string TimeToString( datetime when ) {
    return (timeStr);
 }
 
-double gda_unused_80[];
-
-int deinit() {
-   ObjectDelete("time");
-   ObjectDelete( "locl" );
-   ObjectDelete( "loct" );
-   ObjectDelete( "nyl" );
-   ObjectDelete( "nyt" );
-   ObjectDelete( "gmtl" );
-   ObjectDelete( "gmtt" );
-   ObjectDelete( "Eurl" );   
-   ObjectDelete( "Eurt" );   
-   ObjectDelete( "lonl" );
-   ObjectDelete( "lont" );
-   ObjectDelete( "Sydneyl" );   
-   ObjectDelete( "Sydneyt" );   
-   ObjectDelete( "tokl" );
-   ObjectDelete( "tokt" );
-   ObjectDelete( "brol" );
-   ObjectDelete( "brot" );
-   ObjectDelete( "barl" );
-   ObjectDelete( "bart" );
-
-   return (0);
-}
-
-int init() {
-   SetIndexStyle(0,DRAW_LINE);
-   SetIndexBuffer(0,ExtMapBuffer1);
-   
-   int top=topOff;
-   int left = 600;
-   if ( show12HourTime )
-      left = 102;
-   if ( ShowLocal_GMT_BROK ) {
-      ObjectMakeLabel( "barl", left+130, top );
-      ObjectMakeLabel( "bart", left+80, top );
-      ObjectMakeLabel( "gmtl", left+130, top-15 );
-      ObjectMakeLabel( "gmtt", left+80, top-15 );
-      ObjectMakeLabel( "brol", left+130, top-30 );
-      ObjectMakeLabel( "brot", left+80, top-30 );
-  }
-   ObjectMakeLabel( "locl", left-50, top-50 );
-   ObjectMakeLabel( "loct", left-90, top-50 );
-   ObjectMakeLabel( "Sydneyl", left-130, top-50 );    
-   ObjectMakeLabel( "Sydneyt", left-170, top-50 );          
-   ObjectMakeLabel( "tokl", left-210, top-50 );
-   ObjectMakeLabel( "tokt", left-250, top-50 );
-   ObjectMakeLabel( "Eurl", left-290, top-50 );   
-   ObjectMakeLabel( "Eurt", left-330, top-50 );         
-   ObjectMakeLabel( "lonl", left-370, top-50 );
-   ObjectMakeLabel( "lont", left-410, top-50 );
-   ObjectMakeLabel( "nyl",  left-450, top-50 );
-   ObjectMakeLabel( "nyt",  left-490, top-50 );
-   return (0);
-}
-
-int start() {
-   int li_8 = Time[0] + 60 * Period() - TimeCurrent();
-   double ld_0 = li_8 / 60.0;
-   double ld_1 = ld_0 / Period();
-   int li_12 = li_8 % 60;
-   li_8 = (li_8 - li_8 % 60) / 60;
-   int li_9 = 1;
-   if (ld_1 != 1)
-      li_9 = Volume[0] / (1 - ld_1);
-   int li_10 = Volume[1];
-   Comment(li_8 + " minutes " + li_12 + " seconds left to bar end");
-   ObjectDelete("time");
-   if (ObjectFind("time") != 0) {
-      ObjectCreate("time", OBJ_TEXT, 0, Time[0], Close[0] + 0.0005);
-      if( li_9 > li_10)
-         ObjectSetText("time", "                                         < " + li_8 + ":" + li_12 + " - " + li_10 + " ^ " + li_9 + " >", 8, "Arial", SpringGreen);
-      else
-         ObjectSetText("time", "                                         < " + li_8 + ":" + li_12 + " - " + li_10 + " _ " + li_9 + " >", 8, "Arial", Goldenrod);
-   } else ObjectMove("time", 0, Time[0], Close[0] + 0.0005);
-      int    counted_bars=IndicatorCounted();
+//+------------------------------------------------------------------+
+//| Custom indicator iteration function                              |
+//+------------------------------------------------------------------+
+int start()
+  {
+   int    counted_bars=IndicatorCounted();
 //----
    int dstDelta;
    double local;
@@ -237,9 +163,15 @@ int start() {
    ObjectSetText( "lont", londons, 9, "Arial Bold", londoncolor );
    ObjectSetText( "locl", "北京", 9, "Arial", 北京时间颜色 );
    ObjectSetText( "loct", locals, 9, "Arial Bold", 北京时间颜色 );
-   return (0);
-}
+      
+//----
+   return(0);
+  }
+//+------------------------------------------------------------------+
 
+//+------------------------------------------------------------------+
+//| Custom indicator initialization function                         |
+//+------------------------------------------------------------------+
 int ObjectMakeLabel( string n, int xoff, int yoff ) {
    ObjectCreate( n, OBJ_LABEL, 0, 0, 0 );
    ObjectSet( n, OBJPROP_CORNER, corner );
@@ -247,3 +179,70 @@ int ObjectMakeLabel( string n, int xoff, int yoff ) {
    ObjectSet( n, OBJPROP_YDISTANCE, yoff );
    ObjectSet( n, OBJPROP_BACK, true );
 }
+
+int init()
+  {
+//---- indicators
+   SetIndexStyle(0,DRAW_LINE);
+   SetIndexBuffer(0,ExtMapBuffer1);
+   
+   int top=topOff;
+   int left = 600;
+   if ( show12HourTime )
+      left = 102;
+   if ( ShowLocal_GMT_BROK ) {
+      ObjectMakeLabel( "barl", left+130, top );
+      ObjectMakeLabel( "bart", left+80, top );
+      ObjectMakeLabel( "gmtl", left+130, top-15 );
+      ObjectMakeLabel( "gmtt", left+80, top-15 );
+      ObjectMakeLabel( "brol", left+130, top-30 );
+      ObjectMakeLabel( "brot", left+80, top-30 );
+  }
+   ObjectMakeLabel( "locl", left-50, top-50 );
+   ObjectMakeLabel( "loct", left-90, top-50 );
+   ObjectMakeLabel( "Sydneyl", left-130, top-50 );    
+   ObjectMakeLabel( "Sydneyt", left-170, top-50 );          
+   ObjectMakeLabel( "tokl", left-210, top-50 );
+   ObjectMakeLabel( "tokt", left-250, top-50 );
+   ObjectMakeLabel( "Eurl", left-290, top-50 );   
+   ObjectMakeLabel( "Eurt", left-330, top-50 );         
+   ObjectMakeLabel( "lonl", left-370, top-50 );
+   ObjectMakeLabel( "lont", left-410, top-50 );
+   ObjectMakeLabel( "nyl",  left-450, top-50 );
+   ObjectMakeLabel( "nyt",  left-490, top-50 );
+   
+   
+   
+   
+   
+//----
+   return(0);
+  }
+//+------------------------------------------------------------------+
+//| Custom indicator deinitialization function                       |
+//+------------------------------------------------------------------+
+int deinit()
+  {
+//----
+   ObjectDelete( "locl" );
+   ObjectDelete( "loct" );
+   ObjectDelete( "nyl" );
+   ObjectDelete( "nyt" );
+   ObjectDelete( "gmtl" );
+   ObjectDelete( "gmtt" );
+   ObjectDelete( "Eurl" );   
+   ObjectDelete( "Eurt" );   
+   ObjectDelete( "lonl" );
+   ObjectDelete( "lont" );
+   ObjectDelete( "Sydneyl" );   
+   ObjectDelete( "Sydneyt" );   
+   ObjectDelete( "tokl" );
+   ObjectDelete( "tokt" );
+   ObjectDelete( "brol" );
+   ObjectDelete( "brot" );
+   ObjectDelete( "barl" );
+   ObjectDelete( "bart" );
+//----
+   return(0);
+  }
+
