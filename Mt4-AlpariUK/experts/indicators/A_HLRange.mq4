@@ -7,13 +7,13 @@
 #property link      "http://www.metaquotes.net/"
 
 #property indicator_separate_window
-#property indicator_buffers 2
+#property indicator_buffers 3
 #property indicator_color1 Blue
 #property indicator_color2 Red
 #property indicator_color3 Green
 
 //---- input parameters
-extern int HPeriod=5;
+extern int HLPeriod=5;
 extern double PP=2;
 
 //---- buffers
@@ -28,14 +28,14 @@ int init()
   {
    string short_name="²¨¶¯Çø¼ä", in_name;
 //---- 2 additional buffers are used for counting.
-   IndicatorBuffers(2);
+   IndicatorBuffers(3);
    SetIndexBuffer(0, Buffer1);
    SetIndexBuffer(1, Buffer2);
    SetIndexBuffer(2, Buffer3);
    
 //---- indicator lines
    SetIndexStyle(0,DRAW_HISTOGRAM);
-   SetIndexStyle(1,DRAW_LINE);
+   SetIndexStyle(1,DRAW_HISTOGRAM);
    SetIndexStyle(2,DRAW_LINE);
    /*
    int d[8], index;
@@ -56,10 +56,11 @@ int init()
    }
    Print(in_name);
    */
-   IndicatorShortName(short_name);
-   SetIndexLabel(0,short_name+"today("+HPeriod+")");
-   SetIndexLabel(1,short_name+"short term("+PP+")");
-   SetIndexLabel(2,short_name+"yestoday R");
+   IndicatorShortName(short_name + " HL Period: "+ DoubleToStr(HLPeriod,0)+ ", ATR * "+DoubleToStr(PP,1)+"   |___| ");
+
+   SetIndexLabel(0,short_name+" HighLowB");
+   SetIndexLabel(1,short_name+" HighLowR");
+   SetIndexLabel(2,short_name+" ATRangeG");
    return(0);
   }
 //+------------------------------------------------------------------+
@@ -76,8 +77,13 @@ int start()
 //---- signal line is simple movimg average
    for(i=0; i<limit; i++)
    {
-      Buffer1[i]=High[iHighest(NULL, 0, MODE_HIGH, HPeriod, i+1)]-Low[iLowest(NULL, 0, MODE_LOW, HPeriod, i+1)];
-      Buffer2[i]=PP*iATR(NULL, 0, HPeriod,i+1);
+      Buffer3[i]=PP*iATR(NULL, 0, HLPeriod,i+1);
+      Buffer1[i]=High[iHighest(NULL, 0, MODE_HIGH, HLPeriod, i+1)]-Low[iLowest(NULL, 0, MODE_LOW, HLPeriod, i+1)];
+      Buffer2[i]=High[iHighest(NULL, 0, MODE_HIGH, HLPeriod, i+1)]-Low[iLowest(NULL, 0, MODE_LOW, HLPeriod, i+1)];
+      if( (High[i]-Low[i])>Buffer3[i])
+         Buffer1[i]=0;
+      else
+         Buffer2[i]=0;
       //Buffer3[i]=iATR(NULL, 0, 1, i+1);
    }
 //----
