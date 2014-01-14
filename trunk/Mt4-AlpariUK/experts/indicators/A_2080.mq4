@@ -9,7 +9,7 @@
 #property indicator_chart_window
 
 double p1=0.8, p2=0.2;
-int p3=15, p4=20;
+int p3=18, p4=20;
 string strname="20-80:";
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
@@ -37,7 +37,7 @@ int count=0;
 //+------------------------------------------------------------------+
 int start()
   {
-   int    limit;
+   int    limit,ih,il;
    int    counted_bars=IndicatorCounted();
    //---- check for possible errors
    //Print("counted ", counted_bars);
@@ -50,20 +50,28 @@ int start()
       double datr=High[i]-Low[i], dco=Close[i]-Open[i];
       if( dco > 0)
       {
-         if( (Close[i]-Low[i])/datr > p1 && (Open[i]-Low[i])/datr < p2)// && Close[i] > High[iHighest(NULL,0,MODE_HIGH,p3,2+i)] && iHighest(NULL,0,MODE_HIGH,p3,2+i)==iHighest(NULL,0,MODE_HIGH,p4,2+i))// )
+         //if( (Close[i]-Low[i])/datr > p1 && (Open[i]-Low[i])/datr < p2)//
+         ih=iHighest(NULL,0,MODE_HIGH,p3,1+i);  
+         if( High[i] > High[iHighest(NULL,0,MODE_HIGH,p3,1+i)] && iHighest(NULL,0,MODE_HIGH,p3,1+i)==iHighest(NULL,0,MODE_HIGH,p4,1+i) && iHighest(NULL,0,MODE_HIGH,p3,1+i)!=i+1 )
          {
+            //Print("ihight,", iHighest(NULL,0,MODE_HIGH,p3,1+i));
             ObjectDelete( strname + TimeToStr(Time[i]));
-            ObjectCreate( strname + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], Low[i]); 
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 241);     
+            ObjectCreate( strname + TimeToStr(Time[i]), 2, 0, Time[i-3], High[ih], Time[ih+3], High[ih]); 
+            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_RAY, false); 
+            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            //ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 241);     
          }
       }
       else
       {
-         if( (Close[i]-Low[i])/datr < p2 && (Open[i]-Low[i])/datr > p1)// && Close[i] < Low[iLowest(NULL,0,MODE_LOW,p3,2+i)] && iLowest(NULL,0,MODE_LOW,p3,2+i)==iLowest(NULL,0,MODE_LOW,p4,2+i))// )
+         il=iLowest(NULL,0,MODE_LOW,p3,1+i);
+         //if( (Close[i]-Low[i])/datr < p2 && (Open[i]-Low[i])/datr > p1 && 
+         if( Low[i] < Low[iLowest(NULL,0,MODE_LOW,p3,1+i)] && iLowest(NULL,0,MODE_LOW,p3,1+i)==iLowest(NULL,0,MODE_LOW,p4,1+i) && iLowest(NULL,0,MODE_LOW,p3,1+i)!=i+1 )
          {
             ObjectDelete( strname + TimeToStr(Time[i]));
-            ObjectCreate( strname + TimeToStr(Time[i]), OBJ_ARROW, 0, Time[i], Low[i]); 
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 242);     
+            ObjectCreate( strname + TimeToStr(Time[i]), 2, 0, Time[i-3], Low[il], Time[il+3], Low[il]); 
+            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_RAY, false);     
+            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
          }
       }
    }
