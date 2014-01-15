@@ -8,9 +8,9 @@
 
 #property indicator_chart_window
 
-double p1=0.8, p2=0.2;
-int p3=18, p4=20;
+int p3=16, p4=18;
 string strname="20-80:";
+int t1=0,t2=0,py=0;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
@@ -45,10 +45,17 @@ int start()
 //---- last counted bar will be recounted
    if(counted_bars>0) counted_bars--;
    limit=Bars-counted_bars;
-   for(int i=1;i<limit;i++)
+   for(int i=limit;i>0;i--)
    {
-      double datr=High[i]-Low[i], dco=Close[i]-Open[i];
-      //if( dco > 0)
+      
+      if(py!=TimeYear(Time[i])-1)
+      {
+         py=TimeYear(Time[i])-1;
+         Print("C:"+Symbol()+"year: " + py +" t1: "+t1+" t2: "+t2);
+         t1=0;
+         t2=0;
+      }
+      
       {
          //if( (Close[i]-Low[i])/datr > p1 && (Open[i]-Low[i])/datr < p2)//
          ih1=iHighest(NULL,0,MODE_HIGH,p3,1+i);  
@@ -59,7 +66,8 @@ int start()
             ObjectDelete( strname + TimeToStr(Time[i]));
             ObjectCreate( strname + TimeToStr(Time[i]), 2, 0, Time[i-3], High[ih1], Time[ih1+3], High[ih1]); 
             ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_RAY, false); 
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Yellow); 
+            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            t1++;
             //ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 241);     
          }
       }
@@ -73,7 +81,8 @@ int start()
             ObjectDelete( strname + TimeToStr(Time[i]));
             ObjectCreate( strname + TimeToStr(Time[i]), 2, 0, Time[i-3], Low[il1], Time[il1+3], Low[il1]); 
             ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_RAY, false);     
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Yellow); 
+            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            t2++;
          }
       }
    }
