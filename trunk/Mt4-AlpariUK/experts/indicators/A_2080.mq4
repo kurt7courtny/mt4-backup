@@ -9,7 +9,8 @@
 #property indicator_chart_window
 
 int p3=16, p4=18;
-string strname="20-80:";
+string strnameh="20-80h:";
+string strnamel="20-80l:";
 int t1=0,t2=0,py=0;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
@@ -63,10 +64,13 @@ int start()
          if( High[i] > High[ih1] && ih1==ih2 && ih1!=i+1 )
          {
             //Print("ihight,", iHighest(NULL,0,MODE_HIGH,p3,1+i));
-            ObjectDelete( strname + TimeToStr(Time[i]));
-            ObjectCreate( strname + TimeToStr(Time[i]), 2, 0, Time[i-3], High[ih1], Time[ih1+3], High[ih1]); 
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_RAY, false); 
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            ObjectDelete( strnameh + TimeToStr(Time[i]));
+            if(i-3>0)
+               ObjectCreate( strnameh + TimeToStr(Time[i]), 2, 0, Time[i-3], High[ih1], Time[ih1+3], High[ih1]); 
+            else
+               ObjectCreate( strnameh + TimeToStr(Time[i]), 2, 0, Time[0], High[ih1], Time[ih1+3], High[ih1]); 
+            ObjectSet(strnameh + TimeToStr(Time[i]), OBJPROP_RAY, false); 
+            ObjectSet(strnameh + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
             t1++;
             //ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 241);     
          }
@@ -78,10 +82,13 @@ int start()
          //if( (Close[i]-Low[i])/datr < p2 && (Open[i]-Low[i])/datr > p1 && 
          if( Low[i] < Low[il1] && il1==il2 && il1!=i+1 )
          {
-            ObjectDelete( strname + TimeToStr(Time[i]));
-            ObjectCreate( strname + TimeToStr(Time[i]), 2, 0, Time[i-3], Low[il1], Time[il1+3], Low[il1]); 
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_RAY, false);     
-            ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            ObjectDelete( strnamel + TimeToStr(Time[i]));
+            if(i-3>0)
+               ObjectCreate( strnamel + TimeToStr(Time[i]), 2, 0, Time[i-3], Low[il1], Time[il1+3], Low[il1]); 
+            else
+               ObjectCreate( strnamel + TimeToStr(Time[i]), 2, 0, Time[0], Low[il1], Time[il1+3], Low[il1]); 
+            ObjectSet(strnamel + TimeToStr(Time[i]), OBJPROP_RAY, false);     
+            ObjectSet(strnamel + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
             t2++;
          }
       }
