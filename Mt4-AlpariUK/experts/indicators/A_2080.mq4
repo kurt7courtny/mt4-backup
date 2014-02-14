@@ -12,7 +12,7 @@ int p3=16, p4=18;
 string strnameh="20-80h:";
 string strnamel="20-80l:";
 int t1=0,t2=0,py=0;
-int cor1=Black;
+extern color cor1=Black;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
