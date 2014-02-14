@@ -12,6 +12,7 @@ int p3=16, p4=18;
 string strnameh="20-80h:";
 string strnamel="20-80l:";
 int t1=0,t2=0,py=0;
+int cor1=Black;
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
@@ -70,7 +71,7 @@ int start()
             else
                ObjectCreate( strnameh + TimeToStr(Time[i]), 2, 0, Time[0], High[ih1], Time[ih1+3], High[ih1]); 
             ObjectSet(strnameh + TimeToStr(Time[i]), OBJPROP_RAY, false); 
-            ObjectSet(strnameh + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            ObjectSet(strnameh + TimeToStr(Time[i]), OBJPROP_COLOR, cor1); 
             t1++;
             //ObjectSet(strname + TimeToStr(Time[i]), OBJPROP_ARROWCODE, 241);     
          }
@@ -88,7 +89,7 @@ int start()
             else
                ObjectCreate( strnamel + TimeToStr(Time[i]), 2, 0, Time[0], Low[il1], Time[il1+3], Low[il1]); 
             ObjectSet(strnamel + TimeToStr(Time[i]), OBJPROP_RAY, false);     
-            ObjectSet(strnamel + TimeToStr(Time[i]), OBJPROP_COLOR, Black); 
+            ObjectSet(strnamel + TimeToStr(Time[i]), OBJPROP_COLOR, cor1); 
             t2++;
          }
       }
