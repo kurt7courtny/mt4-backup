@@ -11,13 +11,11 @@
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
 
+extern color cor1=Black;
 // ss and hmr params
-double ss_p1 = 0.2;
-double ss_p2 = 0.3;
+string pname="test:";
 
-// time frame info
-
-int today=0, count=0;
+int toyear=0, count=0,count1=0;
 
 int init()
   {
@@ -41,6 +39,8 @@ int deinit()
 int start()
   {
    int    counted_bars=IndicatorCounted();
+   if(toyear==0)
+         toyear=TimeYear(Time[counted_bars]);
    if (counted_bars > 0) counted_bars--;
    int limit = Bars - counted_bars;
    find_ss_hmr(limit);
@@ -54,25 +54,24 @@ int start()
 // find ss or hammer
 int find_ss_hmr( int  limit)
 {
-   for (int i = 1; i <= limit; i++)
+   for (int i = limit; i >= 1; i--)
    {
-      if( MathAbs( Close[i] - Open[i]) / (High[i]-Low[i]) < ss_p1 && ismaintime(Time[i]))
+      if( Close[i+1] > Open[i+1] && High[i+1] - High[i+2] > 0 && High[i+1] - High[i+2] <0.001)
       {
-         ObjectCreate("A:"+count, OBJ_TEXT, 0, Time[i], High[i] + 100 * Point);
-         ObjectSetText("A:"+count, "SS");
+         ObjectDelete(pname+count);
+         ObjectCreate(pname+count, OBJ_ARROW, 0, Time[i], High[i]+0.005); 
+         ObjectSet(pname+count, OBJPROP_ARROWCODE, 242);
          count++;
+         count1++;
+         if(TimeYear(Time[i])!=toyear)
+         {
+            Print("Year "+toyear+" ,pattern: "+count1);
+            toyear=TimeYear(Time[i]);
+            count1=0;
+         }
       }
    }  
    return(0);
-}
-
-// is main trading Time
-bool ismaintime(datetime dt)
-{
-   if( TimeHour(dt)>= 8 && TimeHour(dt)<20)
-      return (true);
-   else
-      return (false);
 }
 
 // int clear all
@@ -80,7 +79,7 @@ int clear_all()
 {
    for(int i=count-1;i>=0;i--)
    {
-      ObjectDelete("A:"+i);
+      ObjectDelete(pname+i);
    }
    return(0);
 }

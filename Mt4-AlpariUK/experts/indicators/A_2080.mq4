@@ -8,11 +8,12 @@
 
 #property indicator_chart_window
 
-int p3=16, p4=18;
+extern int p3=4, p4=6;
+extern color cor1=Black;
 string strnameh="20-80h:";
 string strnamel="20-80l:";
 int t1=0,t2=0,py=0;
-extern color cor1=Black;
+
 //+------------------------------------------------------------------+
 //| Custom indicator initialization function                         |
 //+------------------------------------------------------------------+
