@@ -56,11 +56,26 @@ int find_ss_hmr( int  limit)
 {
    for (int i = limit; i >= 1; i--)
    {
-      if( Close[i+1] > Open[i+1] && High[i+1] - High[i+2] > 0 && High[i+1] - High[i+2] <0.001)
+      if( Close[i+1] > Open[i+1] && High[i+1] - High[i+2] > 0 && High[i+1] - High[i+2] <0.001 )
       {
          ObjectDelete(pname+count);
          ObjectCreate(pname+count, OBJ_ARROW, 0, Time[i], High[i]+0.005); 
          ObjectSet(pname+count, OBJPROP_ARROWCODE, 242);
+         count++;
+         count1++;
+         if(TimeYear(Time[i])!=toyear)
+         {
+            Print("Year "+toyear+" ,pattern: "+count1);
+            toyear=TimeYear(Time[i]);
+            count1=0;
+         }
+      }
+      
+      if( Close[i+1] < Open[i+1] && Low[i+1] - Low[i+2] < 0 && Low[i+1] - Low[i+2] >-0.001  )
+      {
+         ObjectDelete(pname+count);
+         ObjectCreate(pname+count, OBJ_ARROW, 0, Time[i], Low[i]-0.005); 
+         ObjectSet(pname+count, OBJPROP_ARROWCODE, 241);
          count++;
          count1++;
          if(TimeYear(Time[i])!=toyear)
