@@ -43,7 +43,11 @@ int start()
          toyear=TimeYear(Time[counted_bars]);
    if (counted_bars > 0) counted_bars--;
    int limit = Bars - counted_bars;
-   find_ss_hmr(limit);
+   for (int i = limit; i >= 1; i--)
+   {
+      find_ss_hmr(i);   
+   }
+   
 //----
    
 //----
@@ -52,11 +56,12 @@ int start()
 //+------------------------------------------------------------------+
 
 // find ss or hammer
-int find_ss_hmr( int  limit)
+int find_ss_hmr( int  i)
 {
-   for (int i = limit; i >= 1; i--)
+   int iatr=4;
    {
-      if( Close[i+1] > Open[i+1] && High[i+1] - High[i+2] > 0 && High[i+1] - High[i+2] <0.001 )
+      //if( Close[i+1] > Open[i+1] && High[i+1] - High[i+2] > 0 && High[i+1] - High[i+2] <0.001 )
+      if( isinsideday(i) && (Close[i]-Open[i])*(Close[i+1]-Open[i+1])>0)
       {
          ObjectDelete(pname+count);
          ObjectCreate(pname+count, OBJ_ARROW, 0, Time[i], High[i]+0.005); 
@@ -71,7 +76,7 @@ int find_ss_hmr( int  limit)
          }
       }
       
-      if( Close[i+1] < Open[i+1] && Low[i+1] - Low[i+2] < 0 && Low[i+1] - Low[i+2] >-0.001  )
+      if( Close[i+1] < Open[i+1] && Low[i+1] - Low[i+2] < 0 && Low[i+1] - Low[i+2] >-0.001 &&false )
       {
          ObjectDelete(pname+count);
          ObjectCreate(pname+count, OBJ_ARROW, 0, Time[i], Low[i]-0.005); 
@@ -97,4 +102,14 @@ int clear_all()
       ObjectDelete(pname+i);
    }
    return(0);
+}
+
+bool istar(int i)
+{
+   return(MathAbs(Close[i]-Open[i])<0.001);
+}
+
+bool isinsideday(int i)
+{
+   return(High[i]<High[i+1]&&Low[i]>Low[i+1]);
 }

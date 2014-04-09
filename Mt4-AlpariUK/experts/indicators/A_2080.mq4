@@ -63,12 +63,15 @@ int start()
          //if( (Close[i]-Low[i])/datr > p1 && (Open[i]-Low[i])/datr < p2)//
          ih1=iHighest(NULL,0,MODE_HIGH,p3,1+i);  
          ih2=iHighest(NULL,0,MODE_HIGH,p4,1+i);  
-         if( High[i] > High[ih1] && ih1==ih2 && ih1!=i+1 )
+         il1=iLowest(NULL,0,MODE_LOW,p3,1+i);
+         il2=iLowest(NULL,0,MODE_LOW,p4,1+i);
+         double tt1=0.001;
+         if( High[i+1] < High[i+2] && High[i+1] + tt1 > High[i+2] && High[i] > High[i+1] - tt1 )
          {
             //Print("ihight,", iHighest(NULL,0,MODE_HIGH,p3,1+i));
             ObjectDelete( strnameh + TimeToStr(Time[i]));
             if(i-3>0)
-               ObjectCreate( strnameh + TimeToStr(Time[i]), 2, 0, Time[i-3], High[ih1], Time[ih1+3], High[ih1]); 
+               ObjectCreate( strnameh + TimeToStr(Time[i]), 2, 0, Time[i+2], High[i+2], Time[i], High[i+1]); 
             else
                ObjectCreate( strnameh + TimeToStr(Time[i]), 2, 0, Time[0], High[ih1], Time[ih1+3], High[ih1]); 
             ObjectSet(strnameh + TimeToStr(Time[i]), OBJPROP_RAY, false); 
@@ -79,14 +82,13 @@ int start()
       }
       //else
       {
-         il1=iLowest(NULL,0,MODE_LOW,p3,1+i);
-         il2=iLowest(NULL,0,MODE_LOW,p4,1+i);
+         
          //if( (Close[i]-Low[i])/datr < p2 && (Open[i]-Low[i])/datr > p1 && 
-         if( Low[i] < Low[il1] && il1==il2 && il1!=i+1 )
+         if( Low[i+1] > Low[i+2] && Low[i+1] - tt1 < Low[i+2] && Low[i] < Low[i+1] + tt1)
          {
             ObjectDelete( strnamel + TimeToStr(Time[i]));
             if(i-3>0)
-               ObjectCreate( strnamel + TimeToStr(Time[i]), 2, 0, Time[i-3], Low[il1], Time[il1+3], Low[il1]); 
+               ObjectCreate( strnamel + TimeToStr(Time[i]), 2, 0, Time[i+2], Low[i+2], Time[i], Low[i+1]); 
             else
                ObjectCreate( strnamel + TimeToStr(Time[i]), 2, 0, Time[0], Low[il1], Time[il1+3], Low[il1]); 
             ObjectSet(strnamel + TimeToStr(Time[i]), OBJPROP_RAY, false);     
